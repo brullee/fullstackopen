@@ -1,20 +1,20 @@
 import { useState } from "react";
 
-const Contact = ({ person }) => {
-  return (
-    <>
-      {person.name} {person.number}
-      <br />
-    </>
-  );
+const Contact = ({ person, search }) => {
+  if (person.name.toLowerCase().includes(search))
+    return (
+      <>
+        {person.name} {person.number}
+        <br />
+      </>
+    );
 };
 
-const Numbers = ({ persons }) => {
+const Numbers = ({ persons, search }) => {
   return (
     <div>
-      <h2>Numbers</h2>
       {persons.map((person) => (
-        <Contact key={person.id} person={person} />
+        <Contact key={person.id} person={person} search={search} />
       ))}
     </div>
   );
@@ -29,7 +29,6 @@ const NewContactForm = ({
 }) => {
   return (
     <>
-      <h2>Add New Contact</h2>
       <form onSubmit={addContact}>
         <div>
           Name: <input value={newName} onChange={handleNameChange} />
@@ -44,6 +43,14 @@ const NewContactForm = ({
   );
 };
 
+const Search = ({ search, handleSearch }) => {
+  return (
+    <>
+      Search: <input value={search} onChange={handleSearch}></input>
+    </>
+  );
+};
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "040-123456", id: 1 },
@@ -53,12 +60,15 @@ const App = () => {
   ]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [search, setSearch] = useState("");
 
   const addContact = (event) => {
     event.preventDefault();
-    const names = persons.map((person) => person.name);
+    const nameExists = persons.some((person) => person.name === newName);
 
-    if (!names.includes(newName)) {
+    if (nameExists) {
+      alert(`${newName} is already in the phonebook`);
+    } else {
       const newPersons = persons.concat({
         name: newName,
         number: newNumber,
@@ -69,24 +79,26 @@ const App = () => {
       setNewName("");
       setNewNumber("");
       console.log("Submit: ", newPersons);
-    } else {
-      alert(`${newName} is already in the phonebook`);
     }
   };
 
   const handleNameChange = (event) => {
-    console.log(event.target.value);
     setNewName(event.target.value);
   };
 
   const handleNumberChange = (event) => {
-    console.log(event.target.value);
     setNewNumber(event.target.value);
+  };
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Search search={search} handleSearch={handleSearch} />
+      <h2>Add New Contact</h2>
       <NewContactForm
         addContact={addContact}
         newName={newName}
@@ -94,7 +106,8 @@ const App = () => {
         handleNameChange={handleNameChange}
         handleNumberChange={handleNumberChange}
       />
-      <Numbers persons={persons} />
+      <h2>Numbers</h2>
+      <Numbers persons={persons} search={search} />
     </div>
   );
 };
