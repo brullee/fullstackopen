@@ -3,12 +3,15 @@ import personsService from "./services/persons";
 import Numbers from "./components/Numbers";
 import NewContact from "./components/NewContact";
 import Search from "./components/Search";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
+  const [message, setMessage] = useState(null);
+  const [messageColor, setMessageColor] = useState();
 
   useEffect(() => {
     personsService.getAll().then((initialList) => {
@@ -38,11 +41,29 @@ const App = () => {
                 person.id === existingPerson.id ? changedNumber : person
               )
             );
+          })
+          .catch(() => {
+            setPersons(
+              persons.map((person) => person.id !== existingPerson.id)
+            );
+            setMessageColor("red");
+            setMessage(
+              `${existingPerson.name}' couldn't be found on the server`
+            );
+            setTimeout(() => {
+              setMessage(null);
+              setMessageColor();
+            }, 5000);
           });
       }
     } else {
       personsService.create(newPerson).then((returnedPerson) => {
         setPersons(persons.concat(returnedPerson));
+        setMessageColor();
+        setMessage(`Added ${returnedPerson.name}`);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
       });
     }
     setNewName("");
@@ -70,8 +91,13 @@ const App = () => {
             persons.filter((newPersons) => newPersons.id !== person.id)
           );
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
+          setMessageColor("red");
+          setMessage(`${person.name}' couldn't be found on the server`);
+          setTimeout(() => {
+            setMessage(null);
+            setMessageColor();
+          }, 5000);
           setPersons(persons.filter((p) => p.id !== person.id));
         });
     }
@@ -80,6 +106,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} color={messageColor} />
       <Search search={search} handleSearch={handleSearch} />
       <h2>Add New Contact</h2>
       <NewContact
