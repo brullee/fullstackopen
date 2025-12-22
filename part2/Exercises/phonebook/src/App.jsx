@@ -1,66 +1,27 @@
-import { useState } from "react";
-
-const Contact = ({ person, search }) => {
-  if (person.name.toLowerCase().includes(search))
-    return (
-      <>
-        {person.name} {person.number}
-        <br />
-      </>
-    );
-};
-
-const Numbers = ({ persons, search }) => {
-  return (
-    <div>
-      {persons.map((person) => (
-        <Contact key={person.id} person={person} search={search} />
-      ))}
-    </div>
-  );
-};
-
-const NewContactForm = ({
-  addContact,
-  newName,
-  newNumber,
-  handleNameChange,
-  handleNumberChange,
-}) => {
-  return (
-    <>
-      <form onSubmit={addContact}>
-        <div>
-          Name: <input value={newName} onChange={handleNameChange} />
-          <br />
-          Number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">Add</button>
-        </div>
-      </form>
-    </>
-  );
-};
-
-const Search = ({ search, handleSearch }) => {
-  return (
-    <>
-      Search: <input value={search} onChange={handleSearch}></input>
-    </>
-  );
-};
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Numbers from "./components/Numbers";
+import NewContact from "./components/NewContact";
+import Search from "./components/Search";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
+
+  const hook = () => {
+    console.log("effect");
+    const eventHandler = (response) => {
+      console.log("promise fulfilled");
+      setPersons(response.data);
+    };
+    const promise = axios.get("http://localhost:3001/persons");
+    promise.then(eventHandler);
+  };
+
+  useEffect(hook, []);
+  console.log("render", persons.length, "persons");
 
   const addContact = (event) => {
     event.preventDefault();
@@ -99,7 +60,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Search search={search} handleSearch={handleSearch} />
       <h2>Add New Contact</h2>
-      <NewContactForm
+      <NewContact
         addContact={addContact}
         newName={newName}
         newNumber={newNumber}
