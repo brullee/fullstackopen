@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import personsService from "./services/persons";
 import Numbers from "./components/Numbers";
 import NewContact from "./components/NewContact";
 import Search from "./components/Search";
@@ -10,37 +10,43 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
 
-  const hook = () => {
-    console.log("effect");
-    const eventHandler = (response) => {
-      console.log("promise fulfilled");
-      setPersons(response.data);
-    };
-    const promise = axios.get("http://localhost:3001/persons");
-    promise.then(eventHandler);
-  };
-
-  useEffect(hook, []);
-  console.log("render", persons.length, "persons");
+  useEffect(() => {
+    personsService.getAll().then((initialList) => {
+      setPersons(initialList);
+    });
+  }, []);
 
   const addContact = (event) => {
     event.preventDefault();
-    const nameExists = persons.some((person) => person.name === newName);
 
-    if (nameExists) {
-      alert(`${newName} is already in the phonebook`);
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+    };
+    const existingPerson = persons.find((person) => person.name === newName);
+
+    if (existingPerson) {
+      const confirm = window.confirm(
+        `${newName} is already in the phonebook, do you want to overwrite it?`
+      );
+      if (confirm) {
+        personsService
+          .update(existingPerson.id, newPerson)
+          .then((changedNumber) => {
+            setPersons(
+              persons.map((person) =>
+                person.id === existingPerson.id ? changedNumber : person
+              )
+            );
+          });
+      }
     } else {
-      const newPersons = persons.concat({
-        name: newName,
-        number: newNumber,
-        id: persons.length + 1,
+      personsService.create(newPerson).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
       });
-
-      setPersons(newPersons);
-      setNewName("");
-      setNewNumber("");
-      console.log("Submit: ", newPersons);
     }
+    setNewName("");
+    setNewNumber("");
   };
 
   const handleNameChange = (event) => {
@@ -53,6 +59,22 @@ const App = () => {
 
   const handleSearch = (event) => {
     setSearch(event.target.value);
+  };
+
+  const handleDelete = (person) => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personsService
+        .deletePerson(person.id)
+        .then(() => {
+          setPersons(
+            persons.filter((newPersons) => newPersons.id !== person.id)
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          setPersons(persons.filter((p) => p.id !== person.id));
+        });
+    }
   };
 
   return (
@@ -68,7 +90,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Numbers persons={persons} search={search} />
+      <Numbers persons={persons} search={search} handleDelete={handleDelete} />
     </div>
   );
 };

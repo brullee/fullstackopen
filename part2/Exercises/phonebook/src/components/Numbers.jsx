@@ -1,10 +1,15 @@
 import Contact from "./Contact";
 
-const Numbers = ({ persons, search }) => {
+const Numbers = ({ persons, search, handleDelete }) => {
   return (
     <div>
       {persons.map((person) => (
-        <Contact key={person.id} person={person} search={search} />
+        <Contact
+          key={person.id}
+          person={person}
+          search={search}
+          handleDelete={handleDelete}
+        />
       ))}
     </div>
   );
