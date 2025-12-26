@@ -26,6 +26,7 @@ const App = () => {
       name: newName,
       number: newNumber,
     };
+    console.log(newPerson);
     const existingPerson = persons.find((person) => person.name === newName);
 
     if (existingPerson) {
