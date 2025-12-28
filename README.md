@@ -14,14 +14,40 @@ Each part of the course is implemented incrementally as I progress through the m
 
 ## Technologies used
 
-- JavaScript
-- React
-- Axios
-- REST APIs
-- Render (deployment platform)
-- Node.js with Express
-- MongoDB with Mongoose
-- (more will be added as I go through the course)
+### Frontend
+
+- React (components, state, props, forms)
+- JSX
+- Conditional rendering and event handling
+
+### Backend
+
+- Node.js
+- Express.js (REST API creation, routing, middleware)
+- dotenv (environment variables)
+
+### Database
+
+- MongoDB Atlas (cloud-hosted)
+- Mongoose (schemas, models, queries: `find`, `findOne`, `findById`, `findByIdAndUpdate`, `findByIdAndDelete`)
+
+### HTTP & API
+
+- REST principles (GET, POST, PUT, DELETE)
+- Axios (for fetching data from frontend to backend)
+
+### Testing / API Tools
+
+- Postman (GUI tool for testing API endpoints)
+- REST Client (VS Code extension for testing API requests)
+
+### Other Tools / Concepts
+
+- JSON (data format for API communication)
+- Git & GitHub (version control)
+- npm (package management)
+- Error handling (both frontend & backend)
+- Deployment basics (Render)
 
 ## Notes
 
