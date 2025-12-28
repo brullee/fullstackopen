@@ -16,9 +16,10 @@ Each part of the course is implemented incrementally as I progress through the m
 
 - JavaScript
 - React
-- Node.js with Express
+- Axios
 - REST APIs
 - Render (deployment platform)
+- Node.js with Express
 - MongoDB with Mongoose
 - (more will be added as I go through the course)
 
