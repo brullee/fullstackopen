@@ -2,7 +2,6 @@ const express = require("express");
 var morgan = require("morgan");
 require("dotenv").config();
 const Person = require("./models/person");
-const person = require("./models/person");
 
 const app = express();
 app.use(express.static("dist"));
@@ -34,15 +33,6 @@ app.get("/api/persons", (req, res) => {
 });
 
 app.get("/api/persons/:id", (req, res, next) => {
-  // const id = req.params.id;
-  // const person = persons.find((person) => person.id === id);
-  // if (person) {
-  //   res.json(person);
-  // } else {
-  //   res.statusMessage = "There're no entries with these parameters";
-  //   res.status(404).end();
-  // }
-
   Person.findById(req.params.id)
     .then((person) => {
       if (person) {
@@ -62,7 +52,7 @@ app.delete("/api/persons/:id", (req, res, next) => {
     .catch((error) => next(error));
 });
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const body = req.body;
 
   if (!body.name || !body.number) {
@@ -76,9 +66,12 @@ app.post("/api/persons", (req, res) => {
     number: body.number,
   });
 
-  person.save().then((newPerson) => {
-    res.json(newPerson);
-  });
+  person
+    .save()
+    .then((newPerson) => {
+      res.json(newPerson);
+    })
+    .catch((error) => next(error));
 });
 
 app.put("/api/persons/:id", (req, res, next) => {
@@ -111,6 +104,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);

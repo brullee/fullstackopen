@@ -57,14 +57,25 @@ const App = () => {
           });
       }
     } else {
-      personsService.create(newPerson).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        setMessageColor();
-        setMessage(`Added ${returnedPerson.name}`);
-        setTimeout(() => {
-          setMessage(null);
-        }, 5000);
-      });
+      personsService
+        .create(newPerson)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setMessageColor();
+          setMessage(`Added ${returnedPerson.name}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+        })
+        .catch((error) => {
+          console.log(error.response.data.error);
+          setMessageColor("red");
+          setMessage(error.response.data.error);
+          setTimeout(() => {
+            setMessage(null);
+            setMessageColor();
+          }, 5000);
+        });
     }
     setNewName("");
     setNewNumber("");
