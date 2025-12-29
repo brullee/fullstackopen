@@ -25,6 +25,8 @@ Each part of the course is implemented incrementally as I progress through the m
 - Node.js
 - Express.js (REST API creation, routing, middleware)
 - dotenv (environment variables)
+- CORS (cross-origin resource sharing)
+- Mongoose validation (schema-level validation)
 
 ### Database
 
