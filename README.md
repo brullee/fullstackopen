@@ -46,6 +46,7 @@ Each part of the course is implemented incrementally as I progress through the m
 - JSON (data format for API communication)
 - Git & GitHub (version control)
 - npm (package management)
+- ESLint (code linting)
 - Error handling (both frontend & backend)
 - Deployment basics (Render)
 
