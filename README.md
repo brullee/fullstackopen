@@ -17,7 +17,6 @@ Each part of the course is implemented incrementally as I progress through the m
 ### Frontend
 
 - React (components, state, props, forms)
-- JSX
 - Conditional rendering and event handling
 
 ### Backend
@@ -40,6 +39,7 @@ Each part of the course is implemented incrementally as I progress through the m
 
 ### Testing / API Tools
 
+- supsertest (a package that helps with writing tests)
 - Postman (GUI tool for testing API endpoints)
 - REST Client (VS Code extension for testing API requests)
 
