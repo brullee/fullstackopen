@@ -16,8 +16,7 @@ Each part of the course is implemented incrementally as I progress through the m
 
 ### Frontend
 
-- React (components, state, props, forms)
-- Conditional rendering and event handling
+- React (components, state, props, forms, conditional rendering, event handling)
 
 ### Backend
 
@@ -30,7 +29,7 @@ Each part of the course is implemented incrementally as I progress through the m
 ### Database
 
 - MongoDB Atlas (cloud-hosted)
-- Mongoose (schemas, models, queries: `find`, `findOne`, `findById`, `findByIdAndUpdate`, `findByIdAndDelete`)
+- Mongoose (schemas, models, queries, methods)
 
 ### HTTP & API
 
