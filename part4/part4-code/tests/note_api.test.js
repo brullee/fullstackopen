@@ -65,6 +65,7 @@ describe('when there is initially some notes saved', () => {
       const newNote = {
         content: 'async/await simplifies making async calls',
         important: true,
+        userId: '695e5fb4ec99931a1f27c1de',
       }
 
       await api
