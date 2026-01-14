@@ -8,10 +8,12 @@ const helper = require('./test_helper')
 
 const api = supertest(app)
 
+let token
 
 beforeEach(async () => {
   await Blog.deleteMany({})
   await Blog.insertMany(helper.initialBlogs)
+  token = await helper.userToken(api)
 })
 
 describe('fetching the blogs', () => {
@@ -40,6 +42,7 @@ describe('fetching the blogs', () => {
 })
 
 describe('adding new blogs', () => {
+
   test('POST /api/blogs successfully creates a new blog', async () => {
     const newBlog = {
       title: 'Blog Title',
@@ -50,6 +53,7 @@ describe('adding new blogs', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -70,6 +74,7 @@ describe('adding new blogs', () => {
 
     const response = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -86,6 +91,7 @@ describe('adding new blogs', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
 
@@ -100,10 +106,26 @@ describe('adding new blogs', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
 
   })
+})
+
+test('POST /api/blogs fails with 401 if token is missing', async () => {
+  const newBlog = {
+    title: '0 likes blog',
+    author: 'Author',
+    url: 'String',
+    likes: 0
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(401)
+    .expect('Content-Type', /application\/json/)
 })
 
 describe('deleting a blog', () => {

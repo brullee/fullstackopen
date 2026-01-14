@@ -18,7 +18,7 @@ beforeEach(async () => {
   await user.save()
 })
 
-test('creation fails with proper statuscode and message if username already taken', async () => {
+test('creation fails if username already taken', async () => {
   const usersAtStart = await helper.usersInDb()
 
   const newUser = {
@@ -39,7 +39,7 @@ test('creation fails with proper statuscode and message if username already take
   assert.strictEqual(usersAtEnd.length, usersAtStart.length)
 })
 
-test('creation fails with proper statuscode and message if username is too short', async () => {
+test('creation fails if username is too short', async () => {
   const usersAtStart = await helper.usersInDb()
 
   const newUser = {
