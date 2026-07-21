@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import noteService from "./services/notes";
+import loginService from "./services/login";
 import "./index.css";
 import Note from "./components/Note";
 import Notification from "./components/Notification";
@@ -78,7 +79,7 @@ const handleLogin = async event => {
     }
   }
 
-  const loginForm = () => {
+  const loginForm = () => (
       <form onSubmit={handleLogin}>
         <div>
           <label>
@@ -102,7 +103,7 @@ const handleLogin = async event => {
         </div>
         <button type="submit">login</button>
       </form>
-  }
+  )
 
   const noteForm = () => (
     <form onSubmit={addNote}>
