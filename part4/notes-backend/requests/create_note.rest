@@ -1,0 +1,5 @@
+POST http://localhost:3003/api/notes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFiZGFsbGEiLCJpZCI6IjZhNWYxOTkwMjQyZWU0MWQ5MTVjMTIxYSIsImlhdCI6MTc4NDYxNzQwNiwiZXhwIjoxNzg0NjIxMDA2fQ.bT6ucVT47mxZWQy6dCJIzJCV7DcBtjkf9t9-ShCyQzE
+
+    { "content": "REST Client makes testing APIs way less painful", "important": true }
