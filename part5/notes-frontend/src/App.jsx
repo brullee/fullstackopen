@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import noteService from "./services/notes";
 import loginService from "./services/login";
 
-// import "./index.css";
 import Note from "./components/Note";
 import Notification from "./components/Notification";
 import Footer from "./components/Footer";
@@ -18,15 +17,6 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  // const [user, setUser] = useState(() => {
-  //   const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
-  //   const user = JSON.parse(loggedUserJSON)
-  //   if (loggedUserJSON) {
-  //     noteService.setToken(user.token)
-  //     return user
-  //   } 
-  // })
-
 
   useEffect(() => {
     noteService
