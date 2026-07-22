@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import ErrorMessage from './components/ErrorMessage'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import CreateBlogForm from './components/CreateBlogForm'
+import Togglable from './components/Togglable'
 
 import loginService from './services/login'
 import blogService from './services/blogs'
@@ -18,6 +19,9 @@ const App = () => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
+
+  const blogFormRef = useRef()
+
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -72,29 +76,67 @@ const App = () => {
       url: url,
     };
 
-      blogService
-            .create(newBlog)
-            .then((returnedBlog) => {
-              setBlogs(blogs.concat(returnedBlog));
+    blogService
+          .create(newBlog)
+          .then((returnedBlog) => {
+            blogFormRef.current.toggleVisibility();
+            setBlogs(blogs.concat(returnedBlog));
+            setMessageColor();
+            (`a new blog "${returnedBlog.title}" ${author && `by ${returnedBlog.author}`} added`);
+            setTimeout(() => {
+              setMessage(null);
+            }, 5000);
+          })
+          .catch((error) => {
+          console.log(error);
+          setMessageColor("red");
+            setMessage("title/ url cannot be empty");
+            setTimeout(() => {
+              setMessage(null);
               setMessageColor();
-              setMessage(`a new blog "${returnedBlog.title}" by ${returnedBlog.author} added`);
-              setTimeout(() => {
-                setMessage(null);
-              }, 5000);
-            })
-            .catch((error) => {
-              console.log(error.response.data.error);
-              setMessageColor("red");
-              setMessage(error.response.data.error);
-              setTimeout(() => {
-                setMessage(null);
-                setMessageColor();
-                setTitle(null);
-                setAuthor(null);
-                setUrl(null);
-              }, 5000);
-            });
-        }
+              setTitle(null);
+              setAuthor(null);
+              setUrl(null);
+            }, 5000);
+          });
+      }
+
+  const addLike = (blog) =>{
+
+    const id = blog.id
+
+    const likedBlog = {
+      user: blog.user.id,
+      likes: blog.likes + 1,
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+    };
+
+    setMessage
+        blogService.put(id, likedBlog)
+        .then(()=> {
+          // blogs.map()      // need to update frontend array, replace the array that matches this id with response
+        })
+        .catch((error)=> console.log('caught error: ', error))
+  }
+
+  const blogForm = () => (
+    <Togglable buttonLabel='new blog' ref={blogFormRef}>
+      <CreateBlogForm 
+        addBlog={addBlog} 
+        title={title} setTitle={setTitle} 
+        author={author} setAuthor={setAuthor}
+        url={url} setUrl={setUrl}
+      />
+    </Togglable>
+  )
+
+  const showBlogs = () => (
+    blogs.map(blog =>
+      <Blog key={blog.id} blog={blog} addLike={addLike}/>
+    )
+  )
 
 
   return (
@@ -111,16 +153,8 @@ const App = () => {
       <>
         {user.name} logged in
         <button onClick={handleLogOut}>logout</button>
-        <CreateBlogForm 
-        addBlog={addBlog} 
-        title={title} setTitle={setTitle} 
-        author={author} setAuthor={setAuthor}
-        url={url} setUrl={setUrl}
-        />
-        <h2>Blog</h2>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
+        {blogForm()}
+        {showBlogs()}
       </>
       }
       
