@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from 'react'
 
 import noteService from "./services/notes";
 import loginService from "./services/login";
@@ -8,15 +8,18 @@ import Notification from "./components/Notification";
 import Footer from "./components/Footer";
 import LoginForm from "./components/LoginForm";
 import NoteForm from "./components/NoteForm";
+import Togglable from "./components/Togglable";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState("");
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+
+  const noteFormRef = useRef()
+  const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
   useEffect(() => {
     noteService
@@ -59,73 +62,78 @@ const App = () => {
       });
   };
 
-  const addNote = (event) => {
-    event.preventDefault();
-    const noteObject = {
-      content: newNote,
-      important: Math.random() > 0.5,
-    };
-
+  const addNote = (noteObject) => {
+    noteFormRef.current.toggleVisibility()
     noteService.create(noteObject).then((returnedNote) => {
       setNotes(notes.concat(returnedNote));
-      setNewNote("");
+    }).catch(()=>{
+      setErrorMessage('note content too short, must be 5 characters minimum'),
+      setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000)
     });
   };
 
-  const handleNoteChange = (event) => {
-    setNewNote(event.target.value);
-  };
-
-const handleLogin = async event => {
-  event.preventDefault()
+  const handleLogin = async event => {
+    event.preventDefault()
   
-  try {
-    const user = await loginService.login({ username, password })
+    try {
+      const user = await loginService.login({ username, password })
 
-    window.localStorage.setItem(
-      'loggedNoteappUser', JSON.stringify(user)
-    ) 
-    noteService.setToken(user.token)
-    setUser(user)
-    setUsername('')
-    setPassword('')
-  } catch {
-    setErrorMessage('wrong credentials')
-    setPassword('') 
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 5000)
-    }
+      window.localStorage.setItem(
+        'loggedNoteappUser', JSON.stringify(user)
+      ) 
+      noteService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
+    } catch {
+      setErrorMessage('wrong credentials')
+      setPassword('') 
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      }
   }
-  
+
 const handleLogOut = () =>{
   setUser(null)
   window.localStorage.removeItem("loggedNoteappUser")
 }
 
-  const notesToShow = showAll ? notes : notes.filter((note) => note.important);
+  const loginForm = () => (
+    <Togglable buttonLabel="login">
+      <LoginForm
+        username={username}
+        password={password}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        handleLogin={handleLogin}
+      />
+    </Togglable>
+  )
+
+  const noteForm = () => (
+    <Togglable buttonLabel='new note' ref={noteFormRef}>
+      <NoteForm createNote={addNote} />
+    </Togglable>
+  )
 
   return (
     <div>
-      <h1>Notes</h1>
+      <h1 className='title'>Notes</h1>
+
       <Notification message={errorMessage} />
 
-      {!user &&
-      <LoginForm
-      username={username} setUsername={setUsername}
-      password={password} setPassword={setPassword}
-      handleLogin={handleLogin}
-      />}
-
-      {user && (
-        <div>
-            User: {user.name}
+      {!user && loginForm()}
+        {user && (
+          <div>
+            {user.name} logged in
             <button onClick={handleLogOut}>logout</button>
-          <NoteForm 
-            addNote={addNote} newNote={newNote} 
-            handleNoteChange={handleNoteChange}/>
-        </div>
-      )}
+            {noteForm()}
+          </div>
+        )}
+
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all'}

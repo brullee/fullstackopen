@@ -1,16 +1,15 @@
-h1 {
-  color: blue;
-  font-style: italic;
-}
-
 .note {
-  color: green;
+  color: rgb(255, 0, 0);
   padding-top: 3px;
   font-size: 15px;
 }
 
+.title {
+  color: green;
+  font-style: italic;
+}
+
 .error {
-  color: red;
   background: lightgrey;
   font-size: 20px;
   border-style: solid;
