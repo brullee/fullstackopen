@@ -25,7 +25,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( blogs.sort((a, b) => (b.likes - a.likes)))
     )  
   }, [])
 
@@ -113,13 +113,25 @@ const App = () => {
       url: blog.url,
     };
 
-    setMessage
         blogService.put(id, likedBlog)
-        .then(()=> {
-          // blogs.map()      // need to update frontend array, replace the array that matches this id with response
-        })
+        .then((returnedBlog)=> (
+          setBlogs(blogs.map((b) =>
+            b.id === id ? returnedBlog : b
+          )))
+        )
         .catch((error)=> console.log('caught error: ', error))
   }
+
+  const handleRemove = (blog) =>{
+    const confirm = window.confirm(`Remove ${blog.title}`, blog.author && `by ${blog.author}`)
+    
+    confirm &&  blogService.remove(blog.id)
+    .then(setBlogs(blogs.filter((b) =>
+            b.id === blog.id ? null : b
+          )))
+    .catch((error)=> console.log('caught error: ', error))
+  }
+  
 
   const blogForm = () => (
     <Togglable buttonLabel='new blog' ref={blogFormRef}>
@@ -134,7 +146,11 @@ const App = () => {
 
   const showBlogs = () => (
     blogs.map(blog =>
-      <Blog key={blog.id} blog={blog} addLike={addLike}/>
+      <Blog 
+      key={blog.id} 
+      blog={blog} 
+      addLike={addLike} 
+      handleRemove={handleRemove}/>
     )
   )
 

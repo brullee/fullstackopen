@@ -38,6 +38,8 @@ blogRouter.post('/', userExtractor, async (request, response) => {
 
 blogRouter.delete('/:id', userExtractor, async (request, response) => {
   const user = request.user
+
+  console.log('user: ', request.user)
   const blog = await Blog.findById(request.params.id)
 
   if ( blog.user.toString() === user.id.toString() ){
@@ -49,17 +51,17 @@ blogRouter.delete('/:id', userExtractor, async (request, response) => {
 })
 
 blogRouter.put('/:id', async (request, response) => {
-  // const { likes } = request.body
-
   const blog = await Blog.findById(request.params.id)
   if (!blog) {
     return response.status(404).end()
   }
 
-  // blog.likes = likes
-  blog.likes += 1
+  const updatedBlog = await await Blog
+    .findByIdAndUpdate(
+      request.params.id,
+      request.body, { new: 1 })
+    .populate('user', { username: 1, name: 1 })
 
-  const updatedBlog = await blog.save()
   response.json(updatedBlog)
 })
 

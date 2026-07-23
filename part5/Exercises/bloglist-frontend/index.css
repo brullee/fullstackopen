@@ -13,3 +13,14 @@
   border: solid;
   margin-top: 5px;
 }
+
+.remove-btn {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.remove-btn:hover {
+  background-color: darkred;
+}
