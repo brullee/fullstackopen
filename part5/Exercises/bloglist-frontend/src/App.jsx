@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import ErrorMessage from './components/ErrorMessage'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
-import CreateBlogForm from './components/CreateBlogForm'
+import NewBlogForm from './components/NewBlogForm'
 import Togglable from './components/Togglable'
 
 import loginService from './services/login'
@@ -16,9 +16,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
   const [messageColor, setMessageColor] = useState()
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+
 
   const blogFormRef = useRef()
 
@@ -67,22 +65,15 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogAppUser')
   }
 
-  const addBlog = (event) => {
-    event.preventDefault()
-
-    const newBlog = {
-      title: title,
-      author: author,
-      url: url,
-    }
+  const addBlog = (blogObject) => {
 
     blogService
-      .create(newBlog)
+      .create(blogObject)
       .then((returnedBlog) => {
         blogFormRef.current.toggleVisibility()
         setBlogs(blogs.concat(returnedBlog))
         setMessageColor();
-        (`a new blog "${returnedBlog.title}" ${author && `by ${returnedBlog.author}`} added`)
+        (`a new blog "${returnedBlog.title}" ${blogObject.author && `by ${returnedBlog.author}`} added`)
         setTimeout(() => {
           setMessage(null)
         }, 5000)
@@ -93,9 +84,6 @@ const App = () => {
         setMessage('title/ url cannot be empty')
         setTimeout(() => {
           setMessage(null)
-          setTitle(null)
-          setAuthor(null)
-          setUrl(null)
         }, 5000)
       })
   }
@@ -134,12 +122,7 @@ const App = () => {
 
   const blogForm = () => (
     <Togglable buttonLabel='new blog' ref={blogFormRef}>
-      <CreateBlogForm
-        addBlog={addBlog}
-        title={title} setTitle={setTitle}
-        author={author} setAuthor={setAuthor}
-        url={url} setUrl={setUrl}
-      />
+      <NewBlogForm addBlog={addBlog} />
     </Togglable>
   )
 
