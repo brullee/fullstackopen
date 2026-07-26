@@ -6,7 +6,7 @@ const Footer = () => {
         Note app, Department of Computer Science, University of Helsinki 2026
       </p>
     </div>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer
