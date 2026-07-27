@@ -66,8 +66,8 @@ const App = () => {
     noteFormRef.current.toggleVisibility()
     noteService.create(noteObject).then((returnedNote) => {
       setNotes(notes.concat(returnedNote))
-    }).catch(() => {
-      setErrorMessage('note content too short, must be 5 characters minimum'),
+    }).catch((error) => {
+      setErrorMessage(error.response?.data?.error || error.message)
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -129,7 +129,8 @@ const App = () => {
       {user && (
         <div>
           {user.name} logged in
-          <button onClick={handleLogOut}>logout</button>            {noteForm()}
+          <button onClick={handleLogOut}>logout</button>
+          {noteForm()}
         </div>
       )}
 
