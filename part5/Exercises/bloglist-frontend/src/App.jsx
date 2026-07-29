@@ -72,8 +72,8 @@ const App = () => {
       .then((returnedBlog) => {
         blogFormRef.current.toggleVisibility()
         setBlogs(blogs.concat(returnedBlog))
-        setMessageColor();
-        (`a new blog "${returnedBlog.title}" ${blogObject.author && `by ${returnedBlog.author}`} added`)
+        setMessageColor()
+        setMessage(`a new blog "${returnedBlog.title}" ${blogObject.author && `by ${returnedBlog.author}`} added`)
         setTimeout(() => {
           setMessage(null)
         }, 5000)
@@ -132,7 +132,8 @@ const App = () => {
         key={blog.id}
         blog={blog}
         addLike={addLike}
-        handleRemove={handleRemove}/>
+        handleRemove={handleRemove}
+        user={user}/>
     )
   )
 
