@@ -24,3 +24,7 @@
 .remove-btn:hover {
   background-color: darkred;
 }
+
+.link {
+  padding: 5px
+}

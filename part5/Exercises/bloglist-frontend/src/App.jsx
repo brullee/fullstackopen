@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
+import { Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
+
 
 import ErrorMessage from './components/ErrorMessage'
 import Blog from './components/Blog'
@@ -6,20 +8,19 @@ import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Togglable from './components/Togglable'
 
-import loginService from './services/login'
 import blogService from './services/blogs'
+import loginService from './services/login'
+import BlogList from './components/BlogList'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const [user, setUser] = useState('')
   const [username,setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
   const [messageColor, setMessageColor] = useState()
 
-
-  const blogFormRef = useRef()
-
+  const navigate = useNavigate()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -49,7 +50,9 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch {
+      navigate('/')
+    }
+    catch {
       setMessageColor('red')
       setMessage('wrong credentials')
       setPassword('')
@@ -61,17 +64,16 @@ const App = () => {
   }
 
   const handleLogOut = () => {
-    setUser(null)
+    setUser('')
     window.localStorage.removeItem('loggedBlogAppUser')
   }
 
   const addBlog = (blogObject) => {
-
     blogService
       .create(blogObject)
       .then((returnedBlog) => {
-        blogFormRef.current.toggleVisibility()
         setBlogs(blogs.concat(returnedBlog))
+        navigate('/')
         setMessageColor()
         setMessage(`a new blog "${returnedBlog.title}" ${blogObject.author && `by ${returnedBlog.author}`} added`)
         setTimeout(() => {
@@ -89,7 +91,6 @@ const App = () => {
   }
 
   const addLike = (blog) => {
-
     const id = blog.id
 
     const likedBlog = {
@@ -110,53 +111,61 @@ const App = () => {
   }
 
   const handleRemove = (blog) => {
-    const confirm = window.confirm(`Remove ${blog.title}`, blog.author && `by ${blog.author}`)
+    const confirm = window.confirm(`Remove ${blog.title}${blog.author ? ` by ${blog.author}` : ''}`)
 
     confirm &&  blogService.remove(blog.id)
-      .then(setBlogs(blogs.filter((b) =>
-        b.id === blog.id ? null : b
-      )))
+      .then(() => {
+        setBlogs(blogs.filter((b) => b.id !== blog.id))
+        navigate('/')
+      })
       .catch((error) => console.log('caught error: ', error))
   }
 
+  const match = useMatch('/blogs/:id')
 
-  const blogForm = () => (
-    <Togglable buttonLabel='new blog' ref={blogFormRef}>
-      <NewBlogForm addBlog={addBlog} />
-    </Togglable>
-  )
-
-  const showBlogs = () => (
-    blogs.map(blog =>
-      <Blog
-        key={blog.id}
-        blog={blog}
-        addLike={addLike}
-        handleRemove={handleRemove}
-        user={user}/>
-    )
-  )
-
+  const blog = match
+    ? blogs.find(note => note.id === match.params.id)
+    : null
 
   return (
     <div>
-      {!user ? <h2>Login</h2> : <h2>Blog List</h2>}
+      <div>
+        <Link className='link' to="/">blogs</Link>
+        {user &&
+        <Link className='link' to="/create">new blog</Link>
+        }
+        {!user ?
+          <Link className='link' to="/login">login</Link>
+          : <button onClick={handleLogOut}>logout</button>}
+      </div>
       <ErrorMessage message={message} color={messageColor} />
-      {!user ?
-        <LoginForm
-          username={username} setUsername={setUsername}
-          password={password} setPassword={setPassword}
-          handleLogin={handleLogin}
-        /> :
 
-        <>
-          {user.name} logged in
-          <button onClick={handleLogOut}>logout</button>
-          {blogForm()}
-          {showBlogs()}
-        </>
-      }
+      <Routes>
+        <Route path="/" element={
+          <BlogList blogs={blogs} />}
+        />
+        <Route path="/blogs/:id" element={
+          <Blog
+            blog={blog}
+            addLike={addLike}
+            handleRemove={handleRemove}
+            user={user}/>}
+        />
+        <Route path="/login" element={
+          <div>
+            <h2>Login</h2>
+            <LoginForm
+              username={username} setUsername={setUsername}
+              password={password} setPassword={setPassword}
+              handleLogin={handleLogin}
+            />
+          </div>}
+        />
+        <Route path="/create" element={
+          <NewBlogForm addBlog={addBlog} />
+        }/>
 
+      </Routes>
     </div>
   )
 }

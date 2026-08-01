@@ -8,7 +8,6 @@ import loginService from '../services/login'
 import noteService from '../services/notes'
 
 const NoteList = ({ notes }) => {
-
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')

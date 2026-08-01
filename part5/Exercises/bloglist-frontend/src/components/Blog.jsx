@@ -1,32 +1,25 @@
-import { useState } from 'react'
-
 const Blog = ({ blog, addLike, handleRemove, user }) => {
-  const [visible, setVisible] = useState(false)
 
-  let label = visible ? 'hide' : 'view'
-  const showWhenVisible = { display: visible ? '' : 'none' }
-
-  const toggleVisibility = () => {
-    setVisible(!visible)
+  if (!blog) {
+    return null
   }
+
   return(
-    <div className="blog">
-      {blog.title} {blog.author && `by ${blog.author} `}
-      <button onClick={toggleVisibility}>{label}</button><br />
-      <div style={showWhenVisible}>
-        {blog.url}<br />
+    <div>
+      <h2>{blog.title} {blog.author && `by ${blog.author} `}</h2>
+      {blog.url}<br />
         likes {blog.likes}
+      {user &&
         <button onClick={() => {
           addLike(blog)
-          blog.likes + 1
         }}>
           like
-        </button> <br />
-        {blog.user.name}<br />
-        {blog.user.username === user.username && (
-          <button className="remove-btn" onClick={() => handleRemove(blog)}>remove</button>
-        )}
-      </div>
+        </button>}
+      <br />
+      {blog.user.name}<br />
+      {blog.user.username === user.username && (
+        <button className="remove-btn" onClick={() => handleRemove(blog)}>remove</button>
+      )}
     </div>
   )
 }
