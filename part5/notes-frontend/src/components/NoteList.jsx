@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'react'
-import Note from './Note'
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+
 import Notification from './Notification'
 import LoginForm from './LoginForm'
-import NoteForm from './NoteForm'
 import Togglable from './Togglable'
 import loginService from '../services/login'
 import noteService from '../services/notes'
@@ -15,7 +15,6 @@ const NoteList = ({ notes }) => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const noteFormRef = useRef()
   const notesToShow = showAll ? notes : notes.filter((note) => note.important)
 
   useEffect(() => {
@@ -28,25 +27,6 @@ const NoteList = ({ notes }) => {
     }
   }, [])
 
-  const toggleImportanceOf = (id) => {
-    const note = notes.find((n) => n.id === id)
-    const changedNote = { ...note, important: !note.important }
-
-    noteService
-      .update(id, changedNote)
-      .then((returnedNote) => {
-        // setNotes(notes.map((note) => (note.id === id ? returnedNote : note)))
-      })
-      .catch(() => {
-        setErrorMessage(
-          `Note '${note.content}' was already removed from server`,
-        )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-        // setNotes(notes.filter((n) => n.id !== id))
-      })
-  }
 
   const handleLogin = async event => {
     event.preventDefault()
@@ -87,12 +67,6 @@ const NoteList = ({ notes }) => {
     </Togglable>
   )
 
-  const noteForm = () => (
-    <Togglable buttonLabel='new note' ref={noteFormRef}>
-      <NoteForm createNote={addNote} />
-    </Togglable>
-  )
-
 
   return (
     <div>
@@ -105,7 +79,6 @@ const NoteList = ({ notes }) => {
         <div>
           {user.name} logged in
           <button onClick={handleLogOut}>logout</button>
-          {noteForm()}
         </div>
       )}
 
@@ -116,11 +89,10 @@ const NoteList = ({ notes }) => {
       </div>
       <ul>
         {notesToShow.map(note => (
-          <Note
-            key={note.id}
-            note={note}
-            toggleImportance={() => toggleImportanceOf(note.id)}
-          />
+          <li key={note.id}>
+            <Link
+              to={`/notes/${note.id}`}>{note.content}</Link>
+          </li>
         ))}
       </ul>
     </div>

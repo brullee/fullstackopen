@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'api/notes'
+const baseUrl = '/api/notes'
 
 let token = null
 
@@ -27,4 +27,8 @@ const update = (id, newObject) => {
   return request.then((response) => response.data)
 }
 
-export default { getAll, create, update, setToken }
+const remove = (id) => {
+  return axios.delete(`${baseUrl}/${id}`)
+}
+
+export default { getAll, create, update, remove,  setToken }
