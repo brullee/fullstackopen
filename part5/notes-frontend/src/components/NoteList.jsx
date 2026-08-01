@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
+
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
+
 import { Link } from 'react-router-dom'
 
-import Notification from './Notification'
 import LoginForm from './LoginForm'
 import Togglable from './Togglable'
 import loginService from '../services/login'
@@ -9,7 +11,6 @@ import noteService from '../services/notes'
 
 const NoteList = ({ notes }) => {
   const [showAll, setShowAll] = useState(true)
-  const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -71,9 +72,35 @@ const NoteList = ({ notes }) => {
     <div>
       <h1 className='title'>Notes</h1>
 
-      <Notification message={errorMessage} />
-
-      {!user && loginForm()}
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>content</TableCell>
+              <TableCell>user</TableCell>
+              <TableCell>important</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {notes.map(note => (
+              <TableRow key={note.id}>
+                <TableCell>
+                  <Link to={`/notes/${note.id}`}>
+                    {note.content}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  {note.user.name}
+                </TableCell>
+                <TableCell>
+                  {note.important ? 'yes': ''}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {/* {!user && loginForm()}
       {user && (
         <div>
           {user.name} logged in
@@ -93,7 +120,7 @@ const NoteList = ({ notes }) => {
               to={`/notes/${note.id}`}>{note.content}</Link>
           </li>
         ))}
-      </ul>
+      </ul> */}
     </div>
   )
 }
