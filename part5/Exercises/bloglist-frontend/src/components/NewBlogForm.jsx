@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { TextField, Button } from '@mui/material'
 
 const NewBlogForm = ({ addBlog }) => {
   const [title, setTitle] = useState('')
@@ -22,37 +23,33 @@ const NewBlogForm = ({ addBlog }) => {
     <form onSubmit={createBlog}>
       <div>
         <h2>Create New Blog:</h2>
-        <label>
-          title:
-          <input
-            id="title-input"
-            type="text"
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </label>
+        <TextField
+          label='title'
+          id="title-input"
+          type="text"
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
+        />
         <br/>
-        <label>
-          author:
-          <input
-            id="author-input"
-            type="text"
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </label>
+        <TextField
+          label='author'
+          id="author-input"
+          type="text"
+          value={author}
+          onChange={({ target }) => setAuthor(target.value)}
+        />
         <br/>
-        <label>
-          url:
-          <input
-            id="url-input"
-            type="text"
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </label>
+        <TextField
+          label='url'
+          id="url-input"
+          type="text"
+          value={url}
+          onChange={({ target }) => setUrl(target.value)}
+        />
         <br/>
-        <button type="submit">Create</button>
+        <Button type="submit" variant="contained" style={{ marginTop: 10 }}>
+          Create
+        </Button>
       </div>
     </form>
   )}

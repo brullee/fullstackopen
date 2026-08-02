@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
+import { Container, AppBar, Toolbar, Button, Typography } from '@mui/material'
 
 
-import ErrorMessage from './components/ErrorMessage'
+import Notification from './components/Notification'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
@@ -17,8 +18,7 @@ const App = () => {
   const [user, setUser] = useState('')
   const [username,setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [message, setMessage] = useState(null)
-  const [messageColor, setMessageColor] = useState()
+  const [notification, setNotification] = useState(null)
 
   const navigate = useNavigate()
 
@@ -53,12 +53,10 @@ const App = () => {
       navigate('/')
     }
     catch {
-      setMessageColor('red')
-      setMessage('wrong credentials')
+      setNotification({ text:'wrong credentials', type: 'error' })
       setPassword('')
       setTimeout(() => {
-        setMessage(null)
-        setMessageColor(null)
+        setNotification(null)
       }, 5000)
     }
   }
@@ -74,18 +72,20 @@ const App = () => {
       .then((returnedBlog) => {
         setBlogs(blogs.concat(returnedBlog))
         navigate('/')
-        setMessageColor()
-        setMessage(`a new blog "${returnedBlog.title}" ${blogObject.author && `by ${returnedBlog.author}`} added`)
+        setNotification({
+          text: `a new blog "${returnedBlog.title}" ${blogObject.author && `by ${returnedBlog.author}`} added`,
+          type: 'success' })
         setTimeout(() => {
-          setMessage(null)
+          setNotification(null)
         }, 5000)
       })
       .catch((error) => {
         console.log(error)
-        setMessageColor('red')
-        setMessage('title/ url cannot be empty')
+        setNotification({
+          text: 'title/ url cannot be empty',
+          type: 'error' })
         setTimeout(() => {
-          setMessage(null)
+          setNotification(null)
         }, 5000)
       })
   }
@@ -127,19 +127,22 @@ const App = () => {
     ? blogs.find(note => note.id === match.params.id)
     : null
 
-  return (
-    <div>
-      <div>
-        <Link className='link' to="/">blogs</Link>
-        {user &&
-        <Link className='link' to="/create">new blog</Link>
-        }
-        {!user ?
-          <Link className='link' to="/login">login</Link>
-          : <button onClick={handleLogOut}>logout</button>}
-      </div>
-      <ErrorMessage message={message} color={messageColor} />
+  const style = { '&:hover': { bgcolor: 'rgba(255,255,255,0.3)' } }
 
+  return (
+    <Container>
+      <AppBar position="static" sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h6" component="div" sx={{ padding: '10px' }}>
+          Blog App
+        </Typography>
+        <Toolbar>
+          <Button color="inherit" component={Link} to="/" sx={style}>blogs</Button>
+          {user &&<Button color="inherit" component={Link} to="/create" sx={style}>new blog</Button>}
+          {!user ? <Button color="inherit" component={Link} to="/login" sx={style}>login</Button> :
+            <Button color="inherit" onClick={handleLogOut} sx={style}>logout</Button>}
+        </Toolbar>
+      </AppBar>
+      <Notification notification={notification} />
       <Routes>
         <Route path="/" element={
           <BlogList blogs={blogs} />}
@@ -166,7 +169,7 @@ const App = () => {
         }/>
 
       </Routes>
-    </div>
+    </Container>
   )
 }
 
