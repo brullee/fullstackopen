@@ -2,17 +2,13 @@
 
 This repository contains my solutions and progress for the **Full Stack Open** course by the University of Helsinki.
 
-## Online applications (including exercises & practice material)
-
-- **Notes:** <https://fullstackopen-5fgi.onrender.com/>
-- **Phonebook:** <https://fullstackopen-part3-persons-backend.onrender.com/>
-
 ## Course progress
 
 - **Part 0–2:** React fundamentals, component state, forms, and data fetching
 - **Part 3:** Backend with Node.js, Express, MongoDB, and deployment
 - **Part 4:** Backend testing, user authentication, and authorization
-- **Part 5:** In Progress...
+- **Part 5:** Frontend testing, login/token handling, and end-to-end testing
+- **Part 6:** In Progress...
 
 ## Technologies used
 
@@ -20,6 +16,8 @@ This repository contains my solutions and progress for the **Full Stack Open** c
 
 - React (components, state, props, forms, conditional rendering)
 - Axios (HTTP client)
+- React Router (client-side routing, `useMatch`, `useNavigate`)
+- MUI (Material UI) & Emotion (component library and styling)
 
 ### Backend
 
@@ -35,6 +33,7 @@ This repository contains my solutions and progress for the **Full Stack Open** c
 - Password hashing with bcrypt
 - Token-based authorization for protected routes
 - Middleware-based authentication handling
+- Client-side token persistence with `localStorage` and attaching tokens to requests
 
 ### Testing
 
@@ -44,6 +43,14 @@ This repository contains my solutions and progress for the **Full Stack Open** c
   - API endpoints
   - Authentication and authorization
   - Database state changes
+- Frontend unit/integration testing
+  - Vitest & React Testing Library
+  - jsdom (simulated browser environment)
+  - user-event (simulating user interactions)
+  - Test coverage reporting with @vitest/coverage-v8
+- End-to-end testing
+  - Playwright
+  - Testing full user flows against a running app (login, CRUD, notifications)
 
 ### HTTP & API
 
