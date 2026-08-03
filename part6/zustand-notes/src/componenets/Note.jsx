@@ -1,7 +1,6 @@
 import { useNoteActions } from '../store'
 
 const Note = ({ note }) => {
-
   const { toggleImportance } = useNoteActions()
 
   return (

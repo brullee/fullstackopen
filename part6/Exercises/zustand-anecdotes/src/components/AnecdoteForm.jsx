@@ -1,13 +1,14 @@
-import { useAnecdoteActions } from '../store'
-
+import { useAnecdoteActions, useNotificationActions } from '../store'
 
 function AnecdoteForm() {
   const { addAnecdote } = useAnecdoteActions()
+  const { setNotification } = useNotificationActions()
 
-  const makeAnecdote = (e) => {
+  const makeAnecdote = async (e) => {
     e.preventDefault()
     const anecdote = e.target.anecdote.value
     addAnecdote(anecdote)
+    setNotification(`Created '${anecdote}'`)
     e.target.reset()
   } 
 
