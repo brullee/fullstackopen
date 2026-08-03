@@ -1,13 +1,20 @@
 import { create } from 'zustand'
 
-export const useCounterStore = create(set => ({
-  counter: 0,
+const useNoteStore = create(set => ({
+  notes: [],
   actions: {
-    increment: () => set(state => ({ counter: state.counter + 1 })),
-    decrement: () => set(state => ({ counter: state.counter - 1 })),
-    zero: () => set(() => ({ counter: 0 })),
-  }  
+    add: note => set(
+      state => ({ notes: state.notes.concat(note) })
+    ),
+    toggleImportance: id => set(
+      state => ({
+        notes: state.notes.map(note =>
+          note.id === id ? { ...note, important: !note.important } : note
+        )
+      })
+    )
+  }
 }))
 
-export const useCounter = () => useCounterStore(state => state.counter)
-export const useCounterControls = () => useCounterStore(state => state.actions)
+export const useNotes = () => useNoteStore(state => state.notes)
+export const useNoteActions = () => useNoteStore(state => state.actions)

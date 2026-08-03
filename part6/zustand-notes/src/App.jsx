@@ -1,13 +1,11 @@
-import Display from './componenets/Display'
-import Controls from './componenets/Controls'
+import NoteForm from "./componenets/NoteForm"
+import NoteList from "./componenets/NoteList"
 
-const App = () => {
-  return (
-    <div>
-      <Display />
-      <Controls />
-    </div>
-  )
-}
+const App = () => (
+  <div>
+    <NoteForm />
+    <NoteList />
+  </div>
+)
 
 export default App
