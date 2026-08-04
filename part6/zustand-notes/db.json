@@ -8,7 +8,7 @@
     {
       "id": "2",
       "content": "React app benefits from custom hooks",
-      "important": false
+      "important": true
     },
     {
       "id": "3",
@@ -19,6 +19,11 @@
       "content": "lolpokkjnh",
       "important": false,
       "id": "EQHMzkIAFe0"
+    },
+    {
+      "content": "lol",
+      "important": true,
+      "id": "pu-nAL3Ef00"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

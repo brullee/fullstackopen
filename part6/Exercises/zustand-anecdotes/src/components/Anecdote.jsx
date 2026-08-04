@@ -1,6 +1,6 @@
 import { useAnecdoteActions, useNotificationActions } from '../store'
 
-function Anecdote({anecdote}) {
+function Anecdote({ anecdote }) {
   const { addVote, removeAnecdote } = useAnecdoteActions()
   const { setNotification } = useNotificationActions()
 
@@ -14,15 +14,15 @@ function Anecdote({anecdote}) {
   }
 
   return (
-    <div>
+    <li>
       <div>{anecdote.content}</div>
       <div>
       has {anecdote.votes}
-      <button onClick={() => vote(anecdote)}>vote</button>
-      {anecdote.votes === 0 &&
+        <button onClick={() => vote(anecdote)}>vote</button>
+        {anecdote.votes === 0 &&
       <button onClick={() => remove(anecdote.id)}>remove</button>}
       </div>
-    </div>
+    </li>
   )
 }
 

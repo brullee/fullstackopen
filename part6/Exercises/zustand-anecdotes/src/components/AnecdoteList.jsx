@@ -5,12 +5,12 @@ function AnecdoteList() {
   const anecdotes = useAnecdotes()
 
   return (
-    <div>
+    <ul>
       {anecdotes.toSorted((a,b) => b.votes - a.votes ).map(anecdote => (
         <div key={anecdote.id}>
           <Anecdote anecdote={anecdote}/>
         </div>
-      ))}</div>
+      ))}</ul>
   )
 }
 
