@@ -20,9 +20,9 @@ export const useNotes = () => {
 
   const updateNoteMutation = useMutation({
     mutationFn: updateNote,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notes'] })
-    }
+    onSuccess: (updatedNote) => {
+      const notes = queryClient.getQueryData(['notes'])
+      queryClient.setQueryData(['notes'], notes.map(n => n.id === updatedNote.id ? updatedNote : n))    }
   })
 
   return {
