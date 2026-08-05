@@ -16,7 +16,7 @@ const useAnecdoteStore = create((set, get) => ({
       set(state => ({
         anecdotes: state.anecdotes.filter(n => n.id !== id)
       }))
-  },
+    },
     addVote: async (id) => {
       const anecdote = get().anecdotes.find(n => n.id === id)
       const updated = await anecdoteService.update(
@@ -28,7 +28,7 @@ const useAnecdoteStore = create((set, get) => ({
     },
     addAnecdote: async (anecdote) => {
       const newAnecdote = await anecdoteService.createNew(anecdote)
-      set(state => ({ anecdotes: [...state.anecdotes, newAnecdote]}))
+      set(state => ({ anecdotes: [...state.anecdotes, newAnecdote] }))
     },
     setFilter: value => set(() => ({ filter: value })),
     initialize: async () => {
@@ -41,11 +41,11 @@ const useAnecdoteStore = create((set, get) => ({
 const useNotificationStore = create((set) => ({
   notification: '',
   actions: {
-    setNotification: 
+    setNotification:
     value => {
       set(() => ({ notification: value }))
       setTimeout(() => {
-      set(() => ({ notification: '' }))
+        set(() => ({ notification: '' }))
       }, 5000)
     },
   }
