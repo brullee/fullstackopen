@@ -8,9 +8,10 @@ This repository contains my solutions and progress for the **Full Stack Open** c
 - **Part 3:** Backend with Node.js, Express, MongoDB, and deployment
 - **Part 4:** Backend testing, user authentication, and authorization
 - **Part 5:** Frontend testing, login/token handling, and end-to-end testing
-- **Part 6:** In Progress...
+- **Part 6:** State management with Context API, Zustand, and React Query
+- **Part 7:** In Progress...
 
-## Technologies used
+## Technologies & Concepts
 
 ### Frontend
 
@@ -19,11 +20,19 @@ This repository contains my solutions and progress for the **Full Stack Open** c
 - React Router (client-side routing, `useMatch`, `useNavigate`)
 - MUI (Material UI) & Emotion (component library and styling)
 
+### State Management
+
+- Context API & `useState` (shared state without prop drilling)
+- Zustand (lightweight global state store)
+- TanStack React Query (server-state caching, mutations, and query invalidation)
+- json-server (mock REST backend for local development)
+
 ### Backend
 
 - Node.js
 - Express.js (REST API, routing, middleware)
 - MongoDB & Mongoose (schemas, models, validation)
+- Schema relations with `ref` and `.populate()` (e.g. User ↔ Note references)
 - dotenv (environment variables)
 - CORS (cross-origin resource sharing)
 
@@ -61,6 +70,7 @@ This repository contains my solutions and progress for the **Full Stack Open** c
 
 ### Tooling & Other Concepts
 
+- Web application fundamentals (HTTP request/response cycle, traditional web apps vs. single-page apps)
 - cross-env (cross-platform environment variable support)
 - ESLint (code linting)
 - Git & GitHub (version control)
