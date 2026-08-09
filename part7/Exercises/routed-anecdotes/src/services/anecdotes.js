@@ -1,6 +1,6 @@
 const baseUrl = 'http://localhost:3001/anecdotes'
 
-const getAll = async () => {
+const getAnecdotes = async () => {
   const response = await fetch(baseUrl)
 
   if (!response.ok) {
@@ -10,7 +10,7 @@ const getAll = async () => {
   return await response.json()
 }
 
-const createNew = async (object) => {
+const createAnecdote = async (object) => {
   const response = await fetch(baseUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -24,4 +24,17 @@ const createNew = async (object) => {
   return await response.json()
 }
 
-export default { getAll, createNew }
+const removeAnecdote = async (id) => {
+  const response = await fetch(`${baseUrl}/${id}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to delete anecdote')
+  }
+
+  return response.ok
+}
+
+export default { getAnecdotes, createAnecdote, removeAnecdote }

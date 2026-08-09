@@ -16,13 +16,13 @@ const createNew = async (anecdote) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ content: anecdote, votes: 0 }),
   }
-  
+
   const response = await fetch(baseUrl, options)
-  
+
   if (!response.ok) {
     throw new Error('Failed to create note')
   }
-  
+
   return await response.json()
 }
 
@@ -53,4 +53,4 @@ const remove = async (id) => {
   return response.ok
 }
 
-export default { getAll, createNew, update, remove } 
+export default { getAll, createNew, update, remove }
