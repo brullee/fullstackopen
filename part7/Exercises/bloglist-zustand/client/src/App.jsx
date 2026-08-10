@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
 import { Container, AppBar, Toolbar, Button, Typography } from '@mui/material'
 
+import { useNotificationActions } from './store'
+
 import CatchAll from './components/CatchAll'
 import ErrorBoundary from './components/ErrorBoundary'
 import Notification from './components/Notification'
@@ -19,7 +21,7 @@ const App = () => {
   const [user, setUser] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [notification, setNotification] = useState(null)
+  const { setNotification } = useNotificationActions(null)
 
   const navigate = useNavigate()
 
@@ -53,9 +55,6 @@ const App = () => {
     } catch {
       setNotification({ text: 'wrong credentials', type: 'error' })
       setPassword('')
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
     }
   }
 
@@ -74,9 +73,6 @@ const App = () => {
           text: `a new blog "${returnedBlog.title}" ${blogObject.author && `by ${returnedBlog.author}`} added`,
           type: 'success',
         })
-        setTimeout(() => {
-          setNotification(null)
-        }, 5000)
       })
       .catch((error) => {
         console.log(error)
@@ -84,9 +80,6 @@ const App = () => {
           text: 'title/ url cannot be empty',
           type: 'error',
         })
-        setTimeout(() => {
-          setNotification(null)
-        }, 5000)
       })
   }
 
@@ -165,7 +158,7 @@ const App = () => {
         </Toolbar>
       </AppBar>
 
-      <Notification notification={notification} />
+      <Notification />
       <ErrorBoundary>
         <Routes>
           <Route path="/" element={<BlogList blogs={blogs} />} />
