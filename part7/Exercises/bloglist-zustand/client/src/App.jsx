@@ -20,6 +20,7 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogList from './components/BlogList'
+import persistentUser from './services/persistentUser'
 
 const App = () => {
   const { initialize } = useBlogActions()
@@ -45,7 +46,7 @@ const App = () => {
     try {
       const user = await loginService.login({ username, password })
 
-      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
+      persistentUser.saveUser(user)
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -59,7 +60,7 @@ const App = () => {
 
   const handleLogOut = () => {
     setUser('')
-    window.localStorage.removeItem('loggedBlogAppUser')
+    persistentUser.removeUser()
   }
 
   const style = { '&:hover': { bgcolor: 'rgba(255,255,255,0.3)' } }

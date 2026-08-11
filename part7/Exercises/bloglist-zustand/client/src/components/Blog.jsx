@@ -20,9 +20,11 @@ const Blog = () => {
   const match = useMatch('/blogs/:id')
   const blog = match ? blogs.find((note) => note.id === match.params.id) : null
 
-  const handleRemove = (blog) => {
-    removeBlog(blog)
-    navigate('/')
+  const handleRemove = async (blog) => {
+    const removed = await removeBlog(blog)
+    if (removed) {
+      navigate('/')
+    }
   }
 
   if (!blog) {

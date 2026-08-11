@@ -1,57 +1,40 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { TextField, Button } from '@mui/material'
+import { useField } from '../hooks'
 import { useBlogActions } from '../store'
 
 const NewBlogForm = () => {
   const { addBlog } = useBlogActions()
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-
+  const title = useField('title')
+  const author = useField('author')
+  const url = useField('url')
   const navigate = useNavigate()
 
-  const createBlog = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault()
-    addBlog({
-      title: title,
-      author: author,
-      url: url,
-    })
-    navigate('/')
+    if (title.value && author.value && url.value) {
+      addBlog({
+        title: title.value,
+        author: author.value,
+        url: url.value,
+      })
+      navigate('/')
+    }
 
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    title.onReset()
+    author.onReset()
+    url.onReset()
   }
 
   return (
-    <form onSubmit={createBlog}>
+    <form onSubmit={handleSubmit}>
       <div>
         <h2>Create New Blog:</h2>
-        <TextField
-          label="title"
-          id="title-input"
-          type="text"
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
-        />
+        <TextField id="title-input" {...title} />
         <br />
-        <TextField
-          label="author"
-          id="author-input"
-          type="text"
-          value={author}
-          onChange={({ target }) => setAuthor(target.value)}
-        />
+        <TextField id="author-input" {...author} />
         <br />
-        <TextField
-          label="url"
-          id="url-input"
-          type="text"
-          value={url}
-          onChange={({ target }) => setUrl(target.value)}
-        />
+        <TextField id="url-input" {...url} />
         <br />
         <Button type="submit" variant="contained" style={{ marginTop: 10 }}>
           Create

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import blogService from './services/blogs'
+import persistentUser from './services/persistentUser'
 
 const useNotificationStore = create((set) => ({
   notification: null,
@@ -46,16 +47,17 @@ const useBlogStore = create((set, get) => ({
       const confirm = window.confirm(
         `Remove ${blog.title}${blog.author ? ` by ${blog.author}` : ''}`,
       )
+      if (!confirm) return false
 
-      confirm &&
-        blogService
-          .remove(blog.id)
-          .then(() => {
-            set(() => ({
-              blogs: get().blogs.filter((b) => b.id !== blog.id),
-            }))
-          })
-          .catch((error) => console.log('caught error: ', error))
+      blogService
+        .remove(blog.id)
+        .then(() => {
+          set(() => ({
+            blogs: get().blogs.filter((b) => b.id !== blog.id),
+          }))
+        })
+        .catch((error) => console.log('caught error: ', error))
+      return true
     },
     addLike: (blog) => {
       const id = blog.id
@@ -97,7 +99,7 @@ const useUserStore = create((set) => ({
       set(() => ({ user: value }))
     },
     checkUserToken: () => {
-      const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+      const loggedUserJSON = persistentUser.getUser()
       if (loggedUserJSON) {
         const user = JSON.parse(loggedUserJSON)
         set(() => ({ user: user }))
