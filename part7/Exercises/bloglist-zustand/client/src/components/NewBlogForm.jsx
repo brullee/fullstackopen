@@ -1,10 +1,15 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { TextField, Button } from '@mui/material'
+import { useBlogActions } from '../store'
 
-const NewBlogForm = ({ addBlog }) => {
+const NewBlogForm = () => {
+  const { addBlog } = useBlogActions()
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const navigate = useNavigate()
 
   const createBlog = (event) => {
     event.preventDefault()
@@ -13,6 +18,7 @@ const NewBlogForm = ({ addBlog }) => {
       author: author,
       url: url,
     })
+    navigate('/')
 
     setTitle('')
     setAuthor('')

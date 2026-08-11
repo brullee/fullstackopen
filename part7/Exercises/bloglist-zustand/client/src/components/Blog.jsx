@@ -1,3 +1,4 @@
+import { useNavigate, useMatch } from 'react-router-dom'
 import {
   Card,
   CardContent,
@@ -7,7 +8,23 @@ import {
   Stack,
 } from '@mui/material'
 
-const Blog = ({ blog, addLike, handleRemove, user }) => {
+import { useBlog, useBlogActions, useUser } from '../store'
+
+const Blog = () => {
+  const blogs = useBlog()
+  const user = useUser()
+
+  const { removeBlog, addLike } = useBlogActions()
+
+  const navigate = useNavigate()
+  const match = useMatch('/blogs/:id')
+  const blog = match ? blogs.find((note) => note.id === match.params.id) : null
+
+  const handleRemove = (blog) => {
+    removeBlog(blog)
+    navigate('/')
+  }
+
   if (!blog) {
     return null
   }
@@ -15,7 +32,7 @@ const Blog = ({ blog, addLike, handleRemove, user }) => {
   return (
     <Card variant="outlined" sx={{ mt: 2 }}>
       <CardContent>
-        <Stack spacing={1} alignItems="center">
+        <Stack spacing={1}>
           <Typography variant="h5">{blog.title}</Typography>
           {blog.author && (
             <Typography variant="body1" sx={{ color: 'grey.700' }}>
@@ -29,7 +46,7 @@ const Blog = ({ blog, addLike, handleRemove, user }) => {
             Added by {blog.user.name}
           </Typography>
 
-          <Stack direction="row" spacing={2} alignItems="center">
+          <Stack direction="row" spacing={2}>
             <Typography sx={{ alignContent: 'center' }}>
               {blog.likes} likes
             </Typography>

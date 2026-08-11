@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react'
-import { Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
+import { Routes, Route, Link, useNavigate } from 'react-router-dom'
 import { Container, AppBar, Toolbar, Button, Typography } from '@mui/material'
 
-import { useNotificationActions } from './store'
+import {
+  useNotificationActions,
+  useBlogActions,
+  useUser,
+  useUserActions,
+} from './store'
 
 import CatchAll from './components/CatchAll'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -17,28 +22,22 @@ import loginService from './services/login'
 import BlogList from './components/BlogList'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState('')
+  const { initialize } = useBlogActions()
+  const { setNotification } = useNotificationActions(null)
+  const { setUser, checkUserToken } = useUserActions()
+  const user = useUser()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const { setNotification } = useNotificationActions(null)
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    blogService
-      .getAll()
-      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
-  }, [])
+    initialize()
+  }, [initialize])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
+    checkUserToken()
+  }, [checkUserToken])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -62,64 +61,6 @@ const App = () => {
     setUser('')
     window.localStorage.removeItem('loggedBlogAppUser')
   }
-
-  const addBlog = (blogObject) => {
-    blogService
-      .create(blogObject)
-      .then((returnedBlog) => {
-        setBlogs(blogs.concat(returnedBlog))
-        navigate('/')
-        setNotification({
-          text: `a new blog "${returnedBlog.title}" ${blogObject.author && `by ${returnedBlog.author}`} added`,
-          type: 'success',
-        })
-      })
-      .catch((error) => {
-        console.log(error)
-        setNotification({
-          text: 'title/ url cannot be empty',
-          type: 'error',
-        })
-      })
-  }
-
-  const addLike = (blog) => {
-    const id = blog.id
-
-    const likedBlog = {
-      user: blog.user.id,
-      likes: blog.likes + 1,
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-    }
-
-    blogService
-      .put(id, likedBlog)
-      .then((returnedBlog) =>
-        setBlogs(blogs.map((b) => (b.id === id ? returnedBlog : b))),
-      )
-      .catch((error) => console.log('caught error: ', error))
-  }
-
-  const handleRemove = (blog) => {
-    const confirm = window.confirm(
-      `Remove ${blog.title}${blog.author ? ` by ${blog.author}` : ''}`,
-    )
-
-    confirm &&
-      blogService
-        .remove(blog.id)
-        .then(() => {
-          setBlogs(blogs.filter((b) => b.id !== blog.id))
-          navigate('/')
-        })
-        .catch((error) => console.log('caught error: ', error))
-  }
-
-  const match = useMatch('/blogs/:id')
-
-  const blog = match ? blogs.find((note) => note.id === match.params.id) : null
 
   const style = { '&:hover': { bgcolor: 'rgba(255,255,255,0.3)' } }
 
@@ -161,18 +102,8 @@ const App = () => {
       <Notification />
       <ErrorBoundary>
         <Routes>
-          <Route path="/" element={<BlogList blogs={blogs} />} />
-          <Route
-            path="/blogs/:id"
-            element={
-              <Blog
-                blog={blog}
-                addLike={addLike}
-                handleRemove={handleRemove}
-                user={user}
-              />
-            }
-          />
+          <Route path="/" element={<BlogList />} />
+          <Route path="/blogs/:id" element={<Blog />} />
           <Route
             path="/login"
             element={
@@ -188,7 +119,7 @@ const App = () => {
               </div>
             }
           />
-          <Route path="/create" element={<NewBlogForm addBlog={addBlog} />} />
+          <Route path="/create" element={<NewBlogForm />} />
           <Route path="/*" element={<CatchAll />} />
         </Routes>
       </ErrorBoundary>
