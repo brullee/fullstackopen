@@ -1,4 +1,4 @@
-# Full Stack Open – Exercises
+# Full Stack Open - Exercises
 
 This repository contains my solutions and progress for the **Full Stack Open** course by the University of Helsinki.
 
@@ -9,13 +9,23 @@ This repository contains my solutions and progress for the **Full Stack Open** c
 - **Part 4:** Backend testing, user authentication, and authorization
 - **Part 5:** Frontend testing, login/token handling, and end-to-end testing
 - **Part 6:** State management with Context API, Zustand, and React Query
-- **Part 7:** In Progress...
+- **Part 7:** React Router, custom hooks, and rebuild BlogList in three ways with Context API, TanStack Query, and Zustand
+- **Part 8:** Skipped for now
+- **Part 9:** In progress
+
+## Certificates
+
+Certificates live in [certificates/](certificates/), one file per part (or part range) as they're earned, named `partN.png` (e.g. `part9.png`) or `partN-M.png` for a range.
+
+- **Part 0-7:** [certificates/part0-7.png](certificates/part0-7.png) ([verify](https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/4a3d90cf70d70c1773bb77951361a7b0))
 
 ## Technologies & Concepts
 
 ### Frontend
 
 - React (components, state, props, forms, conditional rendering)
+- Custom hooks (reusable stateful logic, e.g. `useField`, `useNotify`)
+- Error boundaries (class components, `getDerivedStateFromError`)
 - Axios (HTTP client)
 - React Router (client-side routing, `useMatch`, `useNavigate`)
 - MUI (Material UI) & Emotion (component library and styling)
