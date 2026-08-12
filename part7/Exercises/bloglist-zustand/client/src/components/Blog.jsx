@@ -6,15 +6,20 @@ import {
   Link,
   Button,
   Stack,
+  TextField,
+  Divider,
+  Paper,
 } from '@mui/material'
+import { useField } from '../hooks'
 
 import { useBlog, useBlogActions, useLoggedInUser } from '../store'
 
 const Blog = () => {
+  const comment = useField('comment')
   const blogs = useBlog()
   const user = useLoggedInUser()
 
-  const { removeBlog, addLike } = useBlogActions()
+  const { removeBlog, addLike, addComment } = useBlogActions()
 
   const navigate = useNavigate()
   const match = useMatch('/blogs/:id')
@@ -27,12 +32,19 @@ const Blog = () => {
     }
   }
 
+  const handleComment = async (blog, commentValue) => {
+    if (commentValue) {
+      await addComment(blog, commentValue)
+      comment.onReset()
+    }
+  }
+
   if (!blog) {
     return null
   }
 
   return (
-    <Card variant="outlined" sx={{ mt: 2 }}>
+    <Card variant="outlined">
       <CardContent>
         <Stack spacing={1}>
           <Typography variant="h5">{blog.title}</Typography>
@@ -68,6 +80,38 @@ const Blog = () => {
             </Button>
           )}
         </Stack>
+        <Divider sx={{ my: 2 }} />
+
+        <Typography variant="h6" sx={{ mb: 1 }}>
+          Comments
+        </Typography>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 1 }}>
+          <TextField {...comment} size="small" fullWidth />
+          <Button
+            type="button"
+            variant="contained"
+            onClick={() => handleComment(blog, comment.value)}
+          >
+            Post
+          </Button>
+        </Stack>
+        {blog.comments.length === 0 ? (
+          <Typography variant="body2" sx={{ color: 'grey.700' }}>
+            No comments yet
+          </Typography>
+        ) : (
+          <Stack spacing={1}>
+            {blog.comments.map((c) => (
+              <Paper
+                key={c}
+                variant="outlined"
+                sx={{ px: 2, py: 1, bgcolor: 'grey.50', borderRadius: 2 }}
+              >
+                <Typography variant="body2">{c}</Typography>
+              </Paper>
+            ))}
+          </Stack>
+        )}
       </CardContent>
     </Card>
   )

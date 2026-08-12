@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { TextField, Button } from '@mui/material'
+import { TextField, Button, Typography } from '@mui/material'
 import { useField } from '../hooks'
 import { useBlogActions } from '../store'
 
@@ -29,7 +29,9 @@ const NewBlogForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <h2>Create New Blog:</h2>
+        <Typography variant="h5" sx={{ mb: 1 }}>
+          Create New Blog
+        </Typography>
         <TextField id="title-input" {...title} />
         <br />
         <TextField id="author-input" {...author} />

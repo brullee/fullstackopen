@@ -80,6 +80,28 @@ const useBlogStore = create((set, get) => ({
         )
         .catch((error) => console.log('caught error: ', error))
     },
+    addComment: (blog, comment) => {
+      blogService
+        .createComment(blog.id, comment)
+        .then((returnedBlog) => {
+          set(() => ({
+            blogs: get().blogs.map((b) =>
+              b.id === returnedBlog.id ? returnedBlog : b,
+            ),
+          }))
+          useNotificationStore.getState().actions.setNotification({
+            text: `a new comment "${comment}" added`,
+            type: 'success',
+          })
+        })
+        .catch((error) => {
+          console.log(error)
+          useNotificationStore.getState().actions.setNotification({
+            text: 'error',
+            type: 'error',
+          })
+        })
+    },
     initialize: async () => {
       await blogService
         .getAll()

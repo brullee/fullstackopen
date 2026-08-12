@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, Link, useNavigate } from 'react-router-dom'
-import { Container, AppBar, Toolbar, Button, Typography } from '@mui/material'
+import {
+  Container,
+  AppBar,
+  Toolbar,
+  Button,
+  Typography,
+  Box,
+} from '@mui/material'
 
 import {
   useNotificationActions,
@@ -111,16 +118,19 @@ const App = () => {
         </Toolbar>
       </AppBar>
 
-      <Notification />
-      <ErrorBoundary>
-        <Routes>
+      <Box sx={{ mt: 3 }}>
+        <Notification />
+        <ErrorBoundary>
+          <Routes>
           <Route path="/" element={<BlogList />} />
           <Route path="/blogs/:id" element={<Blog />} />
           <Route
             path="/login"
             element={
               <div>
-                <h2>Login</h2>
+                <Typography variant="h5" sx={{ mb: 1 }}>
+                  Login
+                </Typography>
                 <LoginForm
                   username={username}
                   setUsername={setUsername}
@@ -135,8 +145,9 @@ const App = () => {
           <Route path="/users" element={<UserList />} />
           <Route path="/users/:id" element={<User />} />
           <Route path="/*" element={<CatchAll />} />
-        </Routes>
-      </ErrorBoundary>
+          </Routes>
+        </ErrorBoundary>
+      </Box>
     </Container>
   )
 }

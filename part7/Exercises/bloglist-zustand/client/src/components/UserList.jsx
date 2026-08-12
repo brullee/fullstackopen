@@ -6,6 +6,8 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Typography,
+  Box,
 } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { useUser } from '../store'
@@ -14,9 +16,11 @@ const UserList = () => {
   const users = useUser()
 
   return (
-    <div>
-      <h2>Users</h2>
-      <TableContainer component={Paper}>
+    <Box>
+      <Typography variant="h5" sx={{ mb: 1 }}>
+        Users
+      </Typography>
+      <TableContainer component={Paper} variant="outlined">
         <Table>
           <TableHead>
             <TableRow>
@@ -27,7 +31,11 @@ const UserList = () => {
           </TableHead>
           <TableBody>
             {users.map((user) => (
-              <TableRow key={user.id}>
+              <TableRow
+                key={user.id}
+                hover
+                sx={{ '&:last-child td': { border: 0 } }}
+              >
                 <TableCell>
                   <Link to={`/users/${user.id}`}>{user.name}</Link>
                 </TableCell>
@@ -38,7 +46,7 @@ const UserList = () => {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </Box>
   )
 }
 
