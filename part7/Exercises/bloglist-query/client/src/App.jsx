@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import { Routes, Route, Link, useNavigate } from 'react-router-dom'
 import { Container, AppBar, Toolbar, Button, Typography } from '@mui/material'
 
@@ -9,51 +8,18 @@ import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Togglable from './components/Togglable'
-
-import blogService from './services/blogs'
-import loginService from './services/login'
 import BlogList from './components/BlogList'
 
-import useNotification from './hooks/useNotify'
+import useLoggedInUser from './hooks/useLoggedInUser'
 
 const App = () => {
-  const [user, setUser] = useState('')
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const { pushNotification } = useNotification()
+  const { user, LogOut } = useLoggedInUser()
 
   const navigate = useNavigate()
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
-
-  const handleLogin = async (event) => {
-    event.preventDefault()
-
-    try {
-      const user = await loginService.login({ username, password })
-
-      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
-      navigate('/')
-    } catch {
-      pushNotification({ text: 'wrong credentials', type: 'error' })
-      setPassword('')
-    }
-  }
-
   const handleLogOut = () => {
-    setUser('')
-    window.localStorage.removeItem('loggedBlogAppUser')
+    LogOut()
+    navigate('/')
   }
 
   const style = { '&:hover': { bgcolor: 'rgba(255,255,255,0.3)' } }
@@ -103,13 +69,7 @@ const App = () => {
             element={
               <div>
                 <h2>Login</h2>
-                <LoginForm
-                  username={username}
-                  setUsername={setUsername}
-                  password={password}
-                  setPassword={setPassword}
-                  handleLogin={handleLogin}
-                />
+                <LoginForm />
               </div>
             }
           />

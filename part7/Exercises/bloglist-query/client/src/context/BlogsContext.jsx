@@ -1,76 +1,82 @@
-import { createContext, useState, useEffect } from 'react'
+import { createContext } from 'react'
 import useNotification from '../hooks/useNotify'
 import blogService from '../services/blogs'
-
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 const BlogsContext = createContext()
 
 export default BlogsContext
 
 export const BlogsContextProvider = (props) => {
-  const [blogs, setBlogs] = useState([])
   const { pushNotification } = useNotification()
+  const queryClient = useQueryClient()
 
-  useEffect(() => {
-    blogService
-      .getAll()
-      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
-  }, [])
+  const result = useQuery({
+    queryKey: ['blogs'],
+    queryFn: blogService.getAll,
+    refetchOnWindowFocus: false,
+  })
 
-  const addBlog = (blogObject) => {
-    blogService
-      .create(blogObject)
-      .then((returnedBlog) => {
-        setBlogs(blogs.concat(returnedBlog))
-        pushNotification({
-          text: `a new blog "${returnedBlog.title}" ${blogObject.author && `by ${returnedBlog.author}`} added`,
-          type: 'success',
-        })
+  const addBlogMutation = useMutation({
+    mutationFn: blogService.create,
+    onSuccess: (returnedBlog) => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      queryClient.setQueryData(['blogs'], blogs.concat(returnedBlog))
+      pushNotification({
+        text: `a new blog "${returnedBlog.title}" added`,
+        type: 'success',
       })
-      .catch((error) => {
-        console.log(error)
-        pushNotification({
-          text: 'title/ url cannot be empty',
-          type: 'error',
-        })
-      })
-  }
+    },
+    onError: () => {
+      pushNotification({ text: 'title/url cannot be empty', type: 'error' })
+    },
+  })
 
-  const addLike = (blog) => {
-    const id = blog.id
-
-    const likedBlog = {
-      user: blog.user.id,
-      likes: blog.likes + 1,
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-    }
-
-    blogService
-      .put(id, likedBlog)
-      .then((returnedBlog) =>
-        setBlogs(blogs.map((b) => (b.id === id ? returnedBlog : b))),
+  const addLikeMutation = useMutation({
+    mutationFn: (blog) =>
+      blogService.put(blog.id, {
+        user: blog.user.id,
+        likes: blog.likes + 1,
+        title: blog.title,
+        author: blog.author,
+        url: blog.url,
+      }),
+    onSuccess: (updatedBlog) => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      queryClient.setQueryData(
+        ['blogs'],
+        blogs.map((b) => (b.id === updatedBlog.id ? updatedBlog : b)),
       )
-      .catch((error) => console.log('caught error: ', error))
-  }
+    },
+    onError: (err) => {
+      console.log('caught error: ', err)
+    },
+  })
 
-  const removeBlog = (blog) => {
-    const confirm = window.confirm(
-      `Remove ${blog.title}${blog.author ? ` by ${blog.author}` : ''}`,
-    )
+  const removeBlogMutation = useMutation({
+    mutationFn: (blog) => blogService.remove(blog.id),
+    onSuccess: (data, blog) => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      queryClient.setQueryData(
+        ['blogs'],
+        blogs.filter((b) => b.id !== blog.id),
+      )
+    },
+    onError: (error) => console.log('caught error: ', error),
+  })
 
-    confirm &&
-      blogService
-        .remove(blog.id)
-        .then(() => {
-          setBlogs(blogs.filter((b) => b.id !== blog.id))
-          // navigate('/')
-        })
-        .catch((error) => console.log('caught error: ', error))
+  if (result.isPending) {
+    return <div>loading data...</div>
   }
 
   return (
-    <BlogsContext.Provider value={{ blogs, addBlog, addLike, removeBlog }}>
+    <BlogsContext.Provider
+      value={{
+        blogs: result.data.sort((a, b) => b.likes - a.likes),
+        addBlog: addBlogMutation.mutate,
+        addLike: addLikeMutation.mutate,
+        removeBlog: removeBlogMutation.mutate,
+      }}
+    >
       {props.children}
     </BlogsContext.Provider>
   )

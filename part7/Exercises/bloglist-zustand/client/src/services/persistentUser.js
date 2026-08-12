@@ -1,5 +1,5 @@
 const getUser = () => {
-  return window.localStorage.getItem('loggedBlogappUser')
+  return window.localStorage.getItem('loggedBlogAppUser')
 }
 
 const saveUser = (user) => {

@@ -8,15 +8,18 @@ import '../index.css'
 const queryClient = new QueryClient()
 import { NotificationContextProvider } from './context/NotificationContext'
 import { BlogsContextProvider } from './context/BlogsContext'
+import { LoggedInUserContextProvider } from './context/LoggedInUserContext'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Router>
     <QueryClientProvider client={queryClient}>
-      <NotificationContextProvider>
-        <BlogsContextProvider>
-          <App />
-        </BlogsContextProvider>
-      </NotificationContextProvider>
+      <LoggedInUserContextProvider>
+        <NotificationContextProvider>
+          <BlogsContextProvider>
+            <App />
+          </BlogsContextProvider>
+        </NotificationContextProvider>
+      </LoggedInUserContextProvider>
     </QueryClientProvider>
   </Router>,
 )

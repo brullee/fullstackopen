@@ -19,8 +19,13 @@ const Blog = ({ user }) => {
   const blog = match ? blogs.find((note) => note.id === match.params.id) : null
 
   const handleRemove = () => {
-    removeBlog(blog)
-    navigate('/')
+    const ok = window.confirm(
+      `Remove ${blog.title}${blog.author ? ` by ${blog.author}` : ''}`,
+    )
+    if (ok) {
+      removeBlog(blog)
+      navigate('/')
+    }
   }
 
   if (!blog) {
