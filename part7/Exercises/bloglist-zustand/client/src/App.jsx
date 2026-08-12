@@ -5,7 +5,8 @@ import { Container, AppBar, Toolbar, Button, Typography } from '@mui/material'
 import {
   useNotificationActions,
   useBlogActions,
-  useUser,
+  useLoggedInUser,
+  useLoggedInUserActions,
   useUserActions,
 } from './store'
 
@@ -16,6 +17,8 @@ import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Togglable from './components/Togglable'
+import UserList from './components/UserList'
+import User from './components/User'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -23,10 +26,11 @@ import BlogList from './components/BlogList'
 import persistentUser from './services/persistentUser'
 
 const App = () => {
+  const { initializeUsers } = useUserActions()
   const { initialize } = useBlogActions()
   const { setNotification } = useNotificationActions(null)
-  const { setUser, checkUserToken } = useUserActions()
-  const user = useUser()
+  const { setUser, checkUserToken } = useLoggedInUserActions()
+  const user = useLoggedInUser()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -39,6 +43,10 @@ const App = () => {
   useEffect(() => {
     checkUserToken()
   }, [checkUserToken])
+
+  useEffect(() => {
+    initializeUsers()
+  }, [initializeUsers])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -83,6 +91,9 @@ const App = () => {
           <Button color="inherit" component={Link} to="/" sx={style}>
             blogs
           </Button>
+          <Button color="inherit" component={Link} to="/users" sx={style}>
+            users
+          </Button>
           {user && (
             <Button color="inherit" component={Link} to="/create" sx={style}>
               new blog
@@ -121,6 +132,8 @@ const App = () => {
             }
           />
           <Route path="/create" element={<NewBlogForm />} />
+          <Route path="/users" element={<UserList />} />
+          <Route path="/users/:id" element={<User />} />
           <Route path="/*" element={<CatchAll />} />
         </Routes>
       </ErrorBoundary>

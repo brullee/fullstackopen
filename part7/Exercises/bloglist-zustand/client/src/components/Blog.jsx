@@ -8,17 +8,17 @@ import {
   Stack,
 } from '@mui/material'
 
-import { useBlog, useBlogActions, useUser } from '../store'
+import { useBlog, useBlogActions, useLoggedInUser } from '../store'
 
 const Blog = () => {
   const blogs = useBlog()
-  const user = useUser()
+  const user = useLoggedInUser()
 
   const { removeBlog, addLike } = useBlogActions()
 
   const navigate = useNavigate()
   const match = useMatch('/blogs/:id')
-  const blog = match ? blogs.find((note) => note.id === match.params.id) : null
+  const blog = match ? blogs.find((blog) => blog.id === match.params.id) : null
 
   const handleRemove = async (blog) => {
     const removed = await removeBlog(blog)
