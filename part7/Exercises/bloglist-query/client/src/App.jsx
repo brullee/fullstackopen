@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
+import { Routes, Route, Link, useNavigate } from 'react-router-dom'
 import { Container, AppBar, Toolbar, Button, Typography } from '@mui/material'
 
 import CatchAll from './components/CatchAll'
@@ -14,20 +14,15 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogList from './components/BlogList'
 
+import useNotification from './hooks/useNotify'
+
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [notification, setNotification] = useState(null)
+  const { pushNotification } = useNotification()
 
   const navigate = useNavigate()
-
-  useEffect(() => {
-    blogService
-      .getAll()
-      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
-  }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -51,11 +46,8 @@ const App = () => {
       setPassword('')
       navigate('/')
     } catch {
-      setNotification({ text: 'wrong credentials', type: 'error' })
+      pushNotification({ text: 'wrong credentials', type: 'error' })
       setPassword('')
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
     }
   }
 
@@ -63,70 +55,6 @@ const App = () => {
     setUser('')
     window.localStorage.removeItem('loggedBlogAppUser')
   }
-
-  const addBlog = (blogObject) => {
-    blogService
-      .create(blogObject)
-      .then((returnedBlog) => {
-        setBlogs(blogs.concat(returnedBlog))
-        navigate('/')
-        setNotification({
-          text: `a new blog "${returnedBlog.title}" ${blogObject.author && `by ${returnedBlog.author}`} added`,
-          type: 'success',
-        })
-        setTimeout(() => {
-          setNotification(null)
-        }, 5000)
-      })
-      .catch((error) => {
-        console.log(error)
-        setNotification({
-          text: 'title/ url cannot be empty',
-          type: 'error',
-        })
-        setTimeout(() => {
-          setNotification(null)
-        }, 5000)
-      })
-  }
-
-  const addLike = (blog) => {
-    const id = blog.id
-
-    const likedBlog = {
-      user: blog.user.id,
-      likes: blog.likes + 1,
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-    }
-
-    blogService
-      .put(id, likedBlog)
-      .then((returnedBlog) =>
-        setBlogs(blogs.map((b) => (b.id === id ? returnedBlog : b))),
-      )
-      .catch((error) => console.log('caught error: ', error))
-  }
-
-  const handleRemove = (blog) => {
-    const confirm = window.confirm(
-      `Remove ${blog.title}${blog.author ? ` by ${blog.author}` : ''}`,
-    )
-
-    confirm &&
-      blogService
-        .remove(blog.id)
-        .then(() => {
-          setBlogs(blogs.filter((b) => b.id !== blog.id))
-          navigate('/')
-        })
-        .catch((error) => console.log('caught error: ', error))
-  }
-
-  const match = useMatch('/blogs/:id')
-
-  const blog = match ? blogs.find((note) => note.id === match.params.id) : null
 
   const style = { '&:hover': { bgcolor: 'rgba(255,255,255,0.3)' } }
 
@@ -165,21 +93,11 @@ const App = () => {
         </Toolbar>
       </AppBar>
 
-      <Notification notification={notification} />
+      <Notification />
       <ErrorBoundary>
         <Routes>
-          <Route path="/" element={<BlogList blogs={blogs} />} />
-          <Route
-            path="/blogs/:id"
-            element={
-              <Blog
-                blog={blog}
-                addLike={addLike}
-                handleRemove={handleRemove}
-                user={user}
-              />
-            }
-          />
+          <Route path="/" element={<BlogList />} />
+          <Route path="/blogs/:id" element={<Blog user={user} />} />
           <Route
             path="/login"
             element={
@@ -195,7 +113,7 @@ const App = () => {
               </div>
             }
           />
-          <Route path="/create" element={<NewBlogForm addBlog={addBlog} />} />
+          <Route path="/create" element={<NewBlogForm />} />
           <Route path="/*" element={<CatchAll />} />
         </Routes>
       </ErrorBoundary>

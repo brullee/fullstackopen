@@ -6,8 +6,23 @@ import {
   Button,
   Stack,
 } from '@mui/material'
+import { useMatch, useNavigate } from 'react-router-dom'
 
-const Blog = ({ blog, addLike, handleRemove, user }) => {
+import useBlogs from '../hooks/useBlogs'
+
+const Blog = ({ user }) => {
+  const { blogs, addLike, removeBlog } = useBlogs()
+
+  const navigate = useNavigate()
+
+  const match = useMatch('/blogs/:id')
+  const blog = match ? blogs.find((note) => note.id === match.params.id) : null
+
+  const handleRemove = () => {
+    removeBlog(blog)
+    navigate('/')
+  }
+
   if (!blog) {
     return null
   }

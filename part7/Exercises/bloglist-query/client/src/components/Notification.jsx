@@ -1,6 +1,8 @@
 import { Alert } from '@mui/material'
+import useNotification from '../hooks/useNotify'
 
-const Notification = ({ notification }) => {
+const Notification = () => {
+  const { notification } = useNotification()
   if (notification === null) {
     return null
   }

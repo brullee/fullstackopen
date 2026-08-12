@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
 import Blog from './Blog'
+import useBlogs from '../hooks/useBlogs'
 
-function BlogList({ blogs }) {
+function BlogList() {
+  const { blogs } = useBlogs()
+
   return (
     <div>
       <h2>Blog List</h2>
