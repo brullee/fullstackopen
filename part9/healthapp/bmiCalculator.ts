@@ -1,6 +1,26 @@
+import { isNumber } from "./utils.ts";
+
+interface BmiValues {
+  height: number;
+  weight: number;
+}
+
+const parseArguments = (args: string[]): BmiValues => {
+  if (args.length < 4) throw new Error("Not enough arguments");
+  if (args.length > 4) throw new Error("Too many arguments");
+
+  if (isNumber(args[2]) && isNumber(args[3])) {
+    return {
+      height: Number(args[2]) * 0.01,
+      weight: Number(args[3]),
+    };
+  } else {
+    throw new Error("A Provided value was not a number!");
+  }
+};
+
 const calculateBmi = (height: number, weight: number): string => {
-  const heightInMeters = height * 0.01;
-  const bmi = weight / (heightInMeters * heightInMeters);
+  const bmi = weight / (height * height);
 
   if (bmi < 16) {
     return "Underweight (Severe thinness)";
@@ -19,4 +39,13 @@ const calculateBmi = (height: number, weight: number): string => {
   } else return "Obese (Class III)";
 };
 
-console.log(calculateBmi(180, 74));
+try {
+  const { height, weight } = parseArguments(process.argv);
+  console.log(calculateBmi(height, weight));
+} catch (error: unknown) {
+  let errorMessage = "An Error Occured: ";
+  if (error instanceof Error) {
+    errorMessage += error.message;
+  }
+  console.log(errorMessage);
+}

@@ -9,7 +9,8 @@
     "calculateBmi": "tsc && node bmiCalculator.ts",
     "calculateExercises": "tsc && node exerciseCalculator.ts"
   },
-  "dependencies": {
+  "devDependencies": {
+    "@types/node": "^26.4.0",
     "typescript": "^7.0.2"
   }
 }
