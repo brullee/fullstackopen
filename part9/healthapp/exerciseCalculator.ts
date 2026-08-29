@@ -17,11 +17,11 @@ interface ExerciseReport {
 
 const parseArguments = (args: string[]): ExerciseValues => {
   if (args.length < 4) throw new Error("Not enough arguments");
-  if (args.length > 4) throw new Error("Too many arguments");
-  if (isNumber(args[2]) && isArray(args[3].split(","))) {
+
+  if (isNumber(args[2]) && isArray(args.slice(3))) {
     return {
       targetHours: Number(args[2]),
-      hoursPerDay: args[3].split(",").map(Number),
+      hoursPerDay: args.slice(3).map(Number),
     };
   } else {
     throw new Error("A Provided value was not of the correct type!");
