@@ -5,21 +5,7 @@ interface BmiValues {
   weight: number;
 }
 
-const parseArguments = (args: string[]): BmiValues => {
-  if (args.length < 4) throw new Error("Not enough arguments");
-  if (args.length > 4) throw new Error("Too many arguments");
-
-  if (isNumber(args[2]) && isNumber(args[3])) {
-    return {
-      height: Number(args[2]) * 0.01,
-      weight: Number(args[3]),
-    };
-  } else {
-    throw new Error("A Provided value was not a number!");
-  }
-};
-
-const calculateBmi = (height: number, weight: number): string => {
+export const calculateBmi = (height: number, weight: number): string => {
   const bmi = weight / (height * height);
 
   if (bmi < 16) {
@@ -39,13 +25,47 @@ const calculateBmi = (height: number, weight: number): string => {
   } else return "Obese (Class III)";
 };
 
-try {
-  const { height, weight } = parseArguments(process.argv);
-  console.log(calculateBmi(height, weight));
-} catch (error: unknown) {
-  let errorMessage = "An Error Occured: ";
+export const handleError = (error: unknown) => {
   if (error instanceof Error) {
-    errorMessage += error.message;
+    return error.message;
   }
-  console.log(errorMessage);
+  return NaN;
+};
+
+export const parseInput = (height: unknown, weight: unknown): BmiValues => {
+  if (isNumber(height) && isNumber(weight)) {
+    if (Number(height) !== 0 && Number(weight) !== 0) {
+      return {
+        height: Number(height) * 0.01,
+        weight: Number(weight),
+      };
+    } else {
+      throw new Error("A Provided value was too small!");
+    }
+  } else {
+    throw new Error("A Provided value was not a number!");
+  }
+};
+
+if (process.argv[1] === import.meta.filename) {
+  const parseArguments = (args: string[]): BmiValues => {
+    if (args.length < 4) throw new Error("Not enough arguments");
+    if (args.length > 4) throw new Error("Too many arguments");
+
+    if (isNumber(args[2]) && isNumber(args[3])) {
+      return {
+        height: Number(args[2]) * 0.01,
+        weight: Number(args[3]),
+      };
+    } else {
+      throw new Error("A Provided value was not a number!");
+    }
+  };
+
+  try {
+    const { height, weight } = parseArguments(process.argv);
+    console.log(calculateBmi(height, weight));
+  } catch (error: unknown) {
+    console.log("An Error Occured: ", handleError(error));
+  }
 }
