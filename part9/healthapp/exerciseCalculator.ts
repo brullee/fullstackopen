@@ -49,6 +49,10 @@ export const parseBody = (
   hoursPerDay: unknown,
   targetHours: unknown,
 ): ExerciseValues => {
+  if (!hoursPerDay || !targetHours) {
+    throw new Error("parameters missing");
+  }
+
   if (isArray(hoursPerDay) && isNumber(targetHours)) {
     return {
       hoursPerDay: hoursPerDay as number[],

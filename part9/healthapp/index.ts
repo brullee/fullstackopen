@@ -37,7 +37,7 @@ app.post("/exercises", (req, res) => {
   );
 
   const result = calculateExercises(hoursPerDay, targetHours);
-  res.send({ result });
+  res.json({ ...result });
 });
 
 app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {

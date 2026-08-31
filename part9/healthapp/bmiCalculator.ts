@@ -27,16 +27,12 @@ export const calculateBmi = (height: number, weight: number): string => {
 
 export const parseInput = (height: unknown, weight: unknown): BmiValues => {
   if (isNumber(height) && isNumber(weight)) {
-    if (Number(height) !== 0 && Number(weight) !== 0) {
-      return {
-        height: Number(height) * 0.01,
-        weight: Number(weight),
-      };
-    } else {
-      throw new Error("A Provided value was too small!");
-    }
+    return {
+      height: Number(height) * 0.01,
+      weight: Number(weight),
+    };
   } else {
-    throw new Error("A Provided value was not a number!");
+    throw new Error("malformatted parameters");
   }
 };
 
