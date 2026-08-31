@@ -1,4 +1,4 @@
-import { isNumber } from "./utils.ts";
+import { isNumber, handleError } from "./utils.ts";
 
 interface BmiValues {
   height: number;
@@ -23,13 +23,6 @@ export const calculateBmi = (height: number, weight: number): string => {
   } else if (bmi >= 35 && bmi < 40) {
     return "Obese (Class II)";
   } else return "Obese (Class III)";
-};
-
-export const handleError = (error: unknown) => {
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return NaN;
 };
 
 export const parseInput = (height: unknown, weight: unknown): BmiValues => {

@@ -1,7 +1,15 @@
-import express from "express";
-import { parseInput, calculateBmi, handleError } from "./bmiCalculator.ts";
+import express, {
+  type Request,
+  type Response,
+  type NextFunction,
+} from "express";
+import { handleError } from "./utils.ts";
+import { parseInput, calculateBmi } from "./bmiCalculator.ts";
+import { parseBody, calculateExercises } from "./exerciseCalculator.ts";
 
 const app = express();
+
+app.use(express.json());
 
 app.get("/hello", (_req, res) => {
   res.send("Hello Full Stack!");
@@ -9,17 +17,31 @@ app.get("/hello", (_req, res) => {
 
 // http://localhost:3003/bmi?height=180&weight=72
 app.get("/bmi", (req, res) => {
-  try {
-    const { height, weight } = parseInput(req.query.height, req.query.weight);
-    const bmiResult = calculateBmi(height, weight);
-    res.json({
-      weight: weight,
-      height: height / 0.01,
-      bmi: bmiResult,
-    });
-  } catch (error: unknown) {
-    res.json({ error: handleError(error) });
-  }
+  const { height, weight } = parseInput(req.query.height, req.query.weight);
+  const bmiResult = calculateBmi(height, weight);
+  res.send({
+    weight: weight,
+    height: height / 0.01,
+    bmi: bmiResult,
+  });
+});
+
+// http://localhost:3003/exercises
+// with json req body
+app.post("/exercises", (req, res) => {
+  const { hoursPerDay, targetHours } = parseBody(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    req.body.daily_exercises,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    req.body.target,
+  );
+
+  const result = calculateExercises(hoursPerDay, targetHours);
+  res.send({ result });
+});
+
+app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  res.status(400).json({ error: handleError(err) });
 });
 
 const PORT = 3003;
