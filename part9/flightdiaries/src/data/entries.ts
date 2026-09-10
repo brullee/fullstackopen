@@ -1,4 +1,4 @@
-import type { DiaryEntry } from "../types.ts";
+import type { DiaryEntry } from "../utils/types.ts";
 const diaryEntries: DiaryEntry[] = [
   {
     id: 1,

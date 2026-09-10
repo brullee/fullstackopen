@@ -1,5 +1,5 @@
 import diagnosesData from "../data/diagnoses.ts";
-import type { Diagnosis } from "../types.ts";
+import type { Diagnosis } from "../utils/types.ts";
 
 const diagnoses: Diagnosis[] = diagnosesData;
 
