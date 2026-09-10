@@ -22,7 +22,4 @@ router.post("/", (req, res) => {
   }
 });
 
-//     const newDiaryEntry = parseNewDiaryEntry(req.body);
-//     const addedEntry = diaryService.addDiary(newDiaryEntry);
-
 export default router;
