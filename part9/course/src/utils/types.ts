@@ -2,14 +2,9 @@ export interface HeaderProp {
   name: string;
 }
 
-interface CoursePartBase {
+export interface CoursePartBase {
   name: string;
   exerciseCount: number;
-}
-
-interface CoursePartBasic extends CoursePartBase {
-  description: string;
-  kind: "basic";
 }
 
 interface CoursePartGroup extends CoursePartBase {
@@ -17,16 +12,29 @@ interface CoursePartGroup extends CoursePartBase {
   kind: "group";
 }
 
-interface CoursePartBackground extends CoursePartBase {
+interface CoursePartDesc extends CoursePartBase {
   description: string;
+}
+
+interface CoursePartBasic extends CoursePartDesc {
+  kind: "basic";
+}
+
+interface CoursePartBackground extends CoursePartDesc {
   backgroundMaterial: string;
   kind: "background";
+}
+
+interface CoursePartSpecial extends CoursePartDesc {
+  requirements: string[];
+  kind: "special";
 }
 
 export type CoursePart =
   | CoursePartBasic
   | CoursePartGroup
-  | CoursePartBackground;
+  | CoursePartBackground
+  | CoursePartSpecial;
 
 export interface ContentProps {
   parts: CoursePart[];
