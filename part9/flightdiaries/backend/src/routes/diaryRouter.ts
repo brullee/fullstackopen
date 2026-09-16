@@ -40,6 +40,10 @@ router.get("/", (_req, res: Response<NonSensitiveDiaryEntry[]>) => {
   res.send(diaryService.getNonSensitiveEntries());
 });
 
+router.get("/sensetive", (_req, res: Response<NonSensitiveDiaryEntry[]>) => {
+  res.send(diaryService.getEntries());
+});
+
 router.get("/:id", (req, res) => {
   const diary = diaryService.findById(Number(req.params.id));
 
