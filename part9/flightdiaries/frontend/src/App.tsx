@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import type {
-  DiaryEntry,
+import {
+  type DiaryEntry,
   Visibility,
   Weather,
 } from "../../backend/src/utils/types";
@@ -32,14 +32,13 @@ const App = () => {
         })
         .then((response) => setDiaries([response.data, ...diaries]));
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const data = error.response.data;
+      if (axios.isAxiosError(error)) {
         console.error(error.response);
         const errorTemplate = "Error: ";
-        setError(errorTemplate + data.error[0].message);
+        setError(errorTemplate + error.message);
         setTimeout(() => {
           setError("");
-        }, 5000);
+        }, 3000);
       } else {
         console.error(error);
       }
@@ -52,19 +51,37 @@ const App = () => {
       {errorMsg && <h4 style={{ color: "red" }}>{errorMsg}</h4>}
       <form onSubmit={newFlightEntry}>
         date
-        <input value={date} onChange={(event) => setDate(event.target.value)} />
+        <input
+          type="date"
+          value={date}
+          onChange={(event) => setDate(event.target.value)}
+        />
         <br />
         visibility
-        <input
-          value={visibility}
-          onChange={(event) => setVisibility(event.target.value as Visibility)}
-        />
+        {Object.values(Visibility).map((value) => (
+          <span key={value} style={{ marginLeft: "0.5em" }}>
+            {value}
+            <input
+              type="radio"
+              name="visibility"
+              checked={visibility === value}
+              onChange={() => setVisibility(value)}
+            />
+          </span>
+        ))}
         <br />
         weather
-        <input
-          value={weather}
-          onChange={(event) => setWeather(event.target.value as Weather)}
-        />
+        {Object.values(Weather).map((value) => (
+          <span key={value} style={{ marginLeft: "0.5em" }}>
+            {value}
+            <input
+              type="radio"
+              name="weather"
+              checked={weather === value}
+              onChange={() => setWeather(value)}
+            />
+          </span>
+        ))}
         <br />
         comment
         <input
