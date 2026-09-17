@@ -12,6 +12,7 @@ const App = () => {
   const [visibility, setVisibility] = useState<Visibility>();
   const [weather, setWeather] = useState<Weather>();
   const [comment, setComment] = useState("");
+  const [errorMsg, setError] = useState("");
 
   useEffect(() => {
     axios
@@ -19,21 +20,36 @@ const App = () => {
       .then((response) => setDiaries(response.data.reverse()));
   }, []);
 
-  const newFlightEntry = (event: React.SyntheticEvent) => {
+  const newFlightEntry = async (event: React.SyntheticEvent) => {
     event.preventDefault();
-    axios
-      .post<DiaryEntry>("http://localhost:3000/api/diaries", {
-        date: date,
-        weather: weather,
-        visibility: visibility,
-        comment: comment,
-      })
-      .then((response) => setDiaries([response.data, ...diaries]));
+    try {
+      await axios
+        .post<DiaryEntry>("http://localhost:3000/api/diaries", {
+          date: date,
+          weather: weather,
+          visibility: visibility,
+          comment: comment,
+        })
+        .then((response) => setDiaries([response.data, ...diaries]));
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const data = error.response.data;
+        console.error(error.response);
+        const errorTemplate = "Error: ";
+        setError(errorTemplate + data.error[0].message);
+        setTimeout(() => {
+          setError("");
+        }, 5000);
+      } else {
+        console.error(error);
+      }
+    }
   };
 
   return (
     <div>
       <h2>Add New Entry</h2>
+      {errorMsg && <h4 style={{ color: "red" }}>{errorMsg}</h4>}
       <form onSubmit={newFlightEntry}>
         date
         <input value={date} onChange={(event) => setDate(event.target.value)} />
@@ -55,6 +71,7 @@ const App = () => {
           value={comment}
           onChange={(event) => setComment(event.target.value)}
         />
+        <br />
         <button type="submit">add</button>
       </form>
       <h2>Diary Entries</h2>

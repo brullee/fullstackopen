@@ -20,9 +20,9 @@ export const Visibility = {
 export type Visibility = (typeof Visibility)[keyof typeof Visibility];
 
 export const NewEntrySchema = z.object({
-  weather: z.enum(Weather),
-  visibility: z.enum(Visibility),
   date: z.iso.date(),
+  visibility: z.enum(Visibility),
+  weather: z.enum(Weather),
   comment: z.string().optional(),
 });
 
@@ -33,3 +33,12 @@ export interface DiaryEntry extends NewDiaryEntry {
 }
 
 export type NonSensitiveDiaryEntry = Omit<DiaryEntry, "comment">;
+
+z.config({
+  customError: (issue) => {
+    if (issue.code === "invalid_value" && issue.path) {
+      return `Incorrect ${issue.path.join(".")}: ${issue.input}`;
+    }
+    return undefined;
+  },
+});
