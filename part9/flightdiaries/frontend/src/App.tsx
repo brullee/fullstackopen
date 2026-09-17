@@ -1,25 +1,71 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { type DiaryEntry } from "../../backend/src/utils/types";
+import type {
+  DiaryEntry,
+  Visibility,
+  Weather,
+} from "../../backend/src/utils/types";
 
 const App = () => {
   const [diaries, setDiaries] = useState<DiaryEntry[]>([]);
+  const [date, setDate] = useState("");
+  const [visibility, setVisibility] = useState<Visibility>();
+  const [weather, setWeather] = useState<Weather>();
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     axios
       .get<DiaryEntry[]>("http://localhost:3000/api/diaries/sensetive")
-      .then((response) => setDiaries(response.data));
+      .then((response) => setDiaries(response.data.reverse()));
   }, []);
+
+  const newFlightEntry = (event: React.SyntheticEvent) => {
+    event.preventDefault();
+    axios
+      .post<DiaryEntry>("http://localhost:3000/api/diaries", {
+        date: date,
+        weather: weather,
+        visibility: visibility,
+        comment: comment,
+      })
+      .then((response) => setDiaries([response.data, ...diaries]));
+  };
 
   return (
     <div>
+      <h2>Add New Entry</h2>
+      <form onSubmit={newFlightEntry}>
+        date
+        <input value={date} onChange={(event) => setDate(event.target.value)} />
+        <br />
+        visibility
+        <input
+          value={visibility}
+          onChange={(event) => setVisibility(event.target.value as Visibility)}
+        />
+        <br />
+        weather
+        <input
+          value={weather}
+          onChange={(event) => setWeather(event.target.value as Weather)}
+        />
+        <br />
+        comment
+        <input
+          value={comment}
+          onChange={(event) => setComment(event.target.value)}
+        />
+        <button type="submit">add</button>
+      </form>
+      <h2>Diary Entries</h2>
       {diaries.map((diary) => (
-        <ul key={diary.id}>
-          <li>{diary.weather}</li>
-          <li>{diary.visibility}</li>
-          <li>{diary.date}</li>
-          {diary.comment && <li>{diary.comment}</li>}
-        </ul>
+        <div key={diary.id}>
+          <h3>{diary.date}</h3>
+          weather: {diary.weather}
+          <br />
+          visibility: {diary.visibility} <br />
+          {diary.comment && <>comment: {diary.comment}</>}
+        </div>
       ))}
     </div>
   );
