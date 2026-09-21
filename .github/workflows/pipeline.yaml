@@ -8,11 +8,15 @@ on:
 jobs:
   simple_deployment_pipeline:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: part11/pokedex
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
           node-version: "24"
+
       - name: Install dependencies
         run: npm install
       - name: Check style
