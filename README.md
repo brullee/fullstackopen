@@ -12,6 +12,9 @@ This repository contains my solutions and progress for the **Full Stack Open** c
 - **Part 7:** React Router, custom hooks, and rebuild BlogList in three ways with Context API, TanStack Query, and Zustand
 - **Part 8:** Skipped for now
 - **Part 9:** In progress
+- **Part 10:** Skipped for now
+- **Part 11:** In progress
+
 
 ## Certificates
 
