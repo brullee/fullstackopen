@@ -36,7 +36,7 @@ module.exports = [
     },
   },
   {
-    files: ['jest.setup.js'],
+    files: ['jest.setup.js', 'playwright.config.js'],
     languageOptions: {
       ecmaVersion: 2018,
       sourceType: 'module',
