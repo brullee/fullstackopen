@@ -1,0 +1,23 @@
+name: part3 deploy pipeline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "part3/notes-backend/**"
+      - ".github/workflows/part3-deploy.yaml"
+
+jobs:
+  simple_deployment_pipeline:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: part3/notes-backend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Trigger deployment
+        run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
