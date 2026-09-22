@@ -11,10 +11,14 @@ This repository contains my solutions and progress for the **Full Stack Open** c
 - **Part 6:** State management with Context API, Zustand, and React Query
 - **Part 7:** React Router, custom hooks, and rebuild BlogList in three ways with Context API, TanStack Query, and Zustand
 - **Part 8:** Skipped for now
-- **Part 9:** In progress
+- **Part 9:** In progress. TypeScript fundamentals, Patientor, health app, flight diaries
 - **Part 10:** Skipped for now
-- **Part 11:** In progress
+- **Part 11:** In progress. CI/CD pipeline for the Pokedex app, plus a deploy pipeline for the Part 3 notes backend
+- **Part 12–14:** Not started
 
+## Deployed applications
+
+- **Notes backend (Part 3):** [fullstackopen-part3-notes-backend-uzes.onrender.com](https://fullstackopen-part3-notes-backend-uzes.onrender.com/). Deployed on Render, redeployed automatically via a GitHub Actions workflow ([`part3-deploy.yaml`](.github/workflows/part3-deploy.yaml)) on push to `main`.
 
 ## Certificates
 
@@ -73,6 +77,22 @@ Certificates live in [certificates/](certificates/), one file per part (or part 
 - End-to-end testing
   - Playwright
   - Testing full user flows against a running app (login, CRUD, notifications)
+
+### TypeScript
+
+- TypeScript fundamentals (types, interfaces, generics, utility types)
+- Type narrowing & exhaustive type checking (discriminated unions, `never`)
+- Typing React props, state, and event handlers
+- Express + TypeScript backends (`ts-node`, `tsconfig.json`)
+- Runtime schema validation with Zod, layered on top of static types
+- Full-stack TS project (Patientor: typed backend API + React frontend)
+
+### CI/CD
+
+- GitHub Actions workflows (jobs, steps, triggers on `push`/`pull_request`)
+- Automated pipeline: install → lint (ESLint) → unit tests → build → Playwright e2e tests
+- Path-filtered workflow triggers (only run a pipeline when relevant files change)
+- Continuous deployment via a Render deploy hook triggered from a workflow
 
 ### HTTP & API
 
