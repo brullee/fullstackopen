@@ -19,6 +19,7 @@ This repository contains my solutions and progress for the **Full Stack Open** c
 ## Deployed applications
 
 - **Notes backend (Part 3):** [fullstackopen-part3-notes-backend-uzes.onrender.com](https://fullstackopen-part3-notes-backend-uzes.onrender.com/). Deployed on Render, redeployed automatically via a GitHub Actions workflow ([`part3-deploy.yaml`](.github/workflows/part3-deploy.yaml)) on push to `main`.
+- **Pokedex (Part 11):** [fullstackopen-hhdt.onrender.com](https://fullstackopen-hhdt.onrender.com). Deployed on Render, redeployed automatically via the CI pipeline ([`pipeline.yaml`](.github/workflows/pipeline.yaml)) on push to `main`, after lint, tests, build, and e2e tests pass.
 
 ## Certificates
 

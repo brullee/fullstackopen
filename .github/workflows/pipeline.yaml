@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - "part11/pokedex/**"
-      - ".github/workflows/pipeline.yml"
+      - ".github/workflows/pipeline.yaml"
   pull_request:
     branches: [main]
     types: [opened, synchronize]
@@ -34,3 +34,6 @@ jobs:
         run: npx playwright install --with-deps
       - name: Run Playwright tests
         run: npm run test:e2e
+      - name: Trigger deployment
+        if: ${{ github.event_name == 'push' }}
+        run: curl ${{ secrets.POKEDEX_RENDER_DEPLOY_HOOK }}
