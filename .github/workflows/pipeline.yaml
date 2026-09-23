@@ -42,10 +42,8 @@ jobs:
     needs: [simple_deployment_pipeline]
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: part11/pokedex
     steps:
+      - uses: actions/checkout@v7
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@1.75.0
         env:
