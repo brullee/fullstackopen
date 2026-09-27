@@ -122,29 +122,29 @@ const App = () => {
         <Notification />
         <ErrorBoundary>
           <Routes>
-          <Route path="/" element={<BlogList />} />
-          <Route path="/blogs/:id" element={<Blog />} />
-          <Route
-            path="/login"
-            element={
-              <div>
-                <Typography variant="h5" sx={{ mb: 1 }}>
+            <Route path="/" element={<BlogList />} />
+            <Route path="/blogs/:id" element={<Blog />} />
+            <Route
+              path="/login"
+              element={
+                <div>
+                  <Typography variant="h5" sx={{ mb: 1 }}>
                   Login
-                </Typography>
-                <LoginForm
-                  username={username}
-                  setUsername={setUsername}
-                  password={password}
-                  setPassword={setPassword}
-                  handleLogin={handleLogin}
-                />
-              </div>
-            }
-          />
-          <Route path="/create" element={<NewBlogForm />} />
-          <Route path="/users" element={<UserList />} />
-          <Route path="/users/:id" element={<User />} />
-          <Route path="/*" element={<CatchAll />} />
+                  </Typography>
+                  <LoginForm
+                    username={username}
+                    setUsername={setUsername}
+                    password={password}
+                    setPassword={setPassword}
+                    handleLogin={handleLogin}
+                  />
+                </div>
+              }
+            />
+            <Route path="/create" element={<NewBlogForm />} />
+            <Route path="/users" element={<UserList />} />
+            <Route path="/users/:id" element={<User />} />
+            <Route path="/*" element={<CatchAll />} />
           </Routes>
         </ErrorBoundary>
       </Box>

@@ -3,7 +3,9 @@ const { test, after, beforeEach, describe } = require('node:test')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
+const bcrypt = require('bcrypt')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helper')
 
 const api = supertest(app)
@@ -11,8 +13,13 @@ const api = supertest(app)
 let token
 
 beforeEach(async () => {
+  await User.deleteMany({})
+  const passwordHash = await bcrypt.hash('password', 10)
+  const user = await new User({ username: 'root', passwordHash }).save()
+
   await Blog.deleteMany({})
-  await Blog.insertMany(helper.initialBlogs)
+  await Blog.insertMany(helper.initialBlogs.map(blog => ({ ...blog, user: user.id })))
+
   token = await helper.userToken(api)
 })
 
@@ -133,7 +140,10 @@ describe('deleting a blog', () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
-    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
 
@@ -149,11 +159,12 @@ describe('updating a blog', () => {
     const blogsInDb = await helper.blogsInDb()
     const blogToUpdate = blogsInDb[0]
 
-    await api.put(`/api/blogs/${blogToUpdate.id}`).expect(200)
+    const response = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send({ likes: blogToUpdate.likes + 1 })
+      .expect(200)
 
-    const blogsAfterPut= await helper.blogsInDb()
-
-    assert.strictEqual(blogsAfterPut[0].likes, blogToUpdate.likes + 1)
+    assert.strictEqual(response.body.likes, blogToUpdate.likes + 1)
   })
 })
 after(async () => {

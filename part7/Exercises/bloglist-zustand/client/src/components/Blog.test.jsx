@@ -1,55 +1,67 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import Blog from './Blog'
+import { useBlog, useBlogActions, useLoggedInUser } from '../store'
+
+vi.mock('../store')
 
 const blog = {
+  id: '1',
   title: 'fso is good',
   author: 'boris',
   likes: 0,
   url: 'fullstackopen.com',
+  comments: [],
   user: {
     name: 'abdalla',
+    username: 'abdalla',
   },
 }
 
-const mockHandler = vi.fn()
+const addLike = vi.fn()
+
+const renderBlog = () =>
+  render(
+    <MemoryRouter initialEntries={['/blogs/1']}>
+      <Routes>
+        <Route path="/blogs/:id" element={<Blog />} />
+      </Routes>
+    </MemoryRouter>,
+  )
 
 describe('<Blog />', () => {
   beforeEach(() => {
-    render(<Blog blog={blog} addLike={mockHandler} />)
+    addLike.mockClear()
+    useBlog.mockReturnValue([blog])
+    useBlogActions.mockReturnValue({
+      addLike,
+      removeBlog: vi.fn(),
+      addComment: vi.fn(),
+    })
+    useLoggedInUser.mockReturnValue({ username: 'abdalla' })
   })
 
-  test("renders blog's title & author", () => {
-    screen.getByText('fso is good', { exact: false })
+  test('renders blog\'s title, author and url', () => {
+    renderBlog()
+    screen.getByText('fso is good')
     screen.getByText('boris', { exact: false })
+    screen.getByText('fullstackopen.com')
   })
 
-  test('at start the children are not displayed', () => {
-    const url = screen.getByText('fullstackopen.com', { exact: false })
-    const likes = screen.getByText('0', { exact: false })
-    expect(url).not.toBeVisible()
-    expect(likes).not.toBeVisible()
-  })
-
-  test('after clicking the button, children are displayed', async () => {
+  test('clicking the like button twice calls addLike twice', async () => {
     const user = userEvent.setup()
-    const button = screen.getByText('view')
+    renderBlog()
+    const button = screen.getByText('Like')
+    await user.click(button)
     await user.click(button)
 
-    const url = screen.getByText('fullstackopen.com', { exact: false })
-    const likes = screen.getByText('0', { exact: false })
-    expect(url).toBeVisible()
-    expect(likes).toBeVisible()
+    expect(addLike.mock.calls).toHaveLength(2)
   })
 
-  test('clicking the like button twice calls event handler twice', async () => {
-    const user = userEvent.setup()
-    const button = screen.getByText('like')
-    await user.click(button)
-    await user.click(button)
-
-    expect(mockHandler.mock.calls).toHaveLength(2)
-
-    // console.log(mockHandler.mock.calls)
+  test('remove button is only shown to the blog\'s creator', () => {
+    useLoggedInUser.mockReturnValue({ username: 'someoneelse' })
+    renderBlog()
+    expect(screen.queryByText('Remove')).toBeNull()
   })
 })
