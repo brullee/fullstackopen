@@ -32,16 +32,8 @@ jobs:
         run: npm run build
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
-      - name: Run Playwright tests -- --project=chromium
-        run: npm run test:e2e
-      - name: Trigger Build Failure
-        uses: sarisia/actions-status-discord@v1
-        if: ${{ failure() }}
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          status: failure
-          title: "Build failed"
-          description: "Commit ${{ github.event.head_commit.url }} by ${{ github.actor }} broke the build"
+      - name: Run Playwright tests
+        run: npm run test:e2e -- --project=chromium
 
   deploy:
     needs: [build_and_test]
@@ -53,6 +45,31 @@ jobs:
       - name: Trigger Deploy Success
         uses: sarisia/actions-status-discord@v1
         if: ${{ success() && github.event_name == 'push' &&  !contains(join(github.event.head_commit.message, ' '), '#skip')}}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: success
+          title: "New version of Pokedex deployed"
+
+  notify_failure:
+    needs: [build_and_test]
+    if: ${{ failure() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Build Failure
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: failure
+          title: "Build failed"
+          description: "Commit ${{ github.event.head_commit.url }} by ${{ github.actor }} broke the build"
+
+  notify_success:
+    needs: [deploy]
+    if: ${{ success() && github.event_name == 'push' &&  !contains(join(github.event.head_commit.message, ' '), '#skip')}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Deploy Success
+        uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: success
