@@ -51,7 +51,7 @@ jobs:
           title: "New version of Pokedex deployed"
 
   notify_failure:
-    needs: [build_and_test]
+    needs: [deploy]
     if: ${{ failure() }}
     runs-on: ubuntu-latest
     steps:
