@@ -11,7 +11,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  simple_deployment_pipeline:
+  build_and_test:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -34,16 +34,6 @@ jobs:
         run: npx playwright install --with-deps
       - name: Run Playwright tests
         run: npm run test:e2e
-      - name: Trigger deployment
-        if: ${{ github.event_name == 'push' &&  !contains(join(github.event.commits.*.message, ' '), '#skip')}}
-        run: curl ${{ secrets.POKEDEX_RENDER_DEPLOY_HOOK }}
-      - name: Trigger Build Success
-        uses: sarisia/actions-status-discord@v1
-        if: ${{ success() && github.event_name == 'push' &&  !contains(join(github.event.commits.*.message, ' '), '#skip')}}
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          status: success
-          title: "New version of Pokedex deployed"
       - name: Trigger Build Failure
         uses: sarisia/actions-status-discord@v1
         if: ${{ failure() }}
@@ -51,10 +41,26 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: failure
           title: "Build failed"
+          description: "Commit ${{ github.event.head_commit.url }} by ${{ github.actor }} broke the build"
+
+  deploy:
+    needs: [build_and_test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deployment
+        if: ${{ github.event_name == 'push' &&  !contains(join(github.event.head_commit.message, ' '), '#skip')}}
+        run: curl ${{ secrets.POKEDEX_RENDER_DEPLOY_HOOK }}
+      - name: Trigger Deploy Success
+        uses: sarisia/actions-status-discord@v1
+        if: ${{ success() && github.event_name == 'push' &&  !contains(join(github.event.head_commit.message, ' '), '#skip')}}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: success
+          title: "New version of Pokedex deployed"
 
   tag_release:
-    needs: [simple_deployment_pipeline]
-    if: github.event_name == 'push' &&  !contains(join(github.event.commits.*.message, ' '), '#skip')
+    needs: [deploy]
+    if: github.event_name == 'push' &&  !contains(join(github.event.head_commit.message, ' '), '#skip')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
