@@ -6,6 +6,7 @@ on:
     paths:
       - "part9/patientor/**"
       - "part9/patientor-api-tests/**"
+      - ".github/workflows/part9-patientor-api-tests.yml"
 
 jobs:
   test:

@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - "part11/pokedex/**"
-      - ".github/workflows/pipeline.yaml"
+      - ".github/workflows/part11-pipeline.yaml"
   pull_request:
     branches: [main]
     types: [opened, synchronize]

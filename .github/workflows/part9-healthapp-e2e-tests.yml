@@ -6,7 +6,7 @@ on:
     paths:
       - "part9/healthapp/**"
       - "part9/healthapp-tests/**"
-      - ".github/workflows/healthapp-e2e-tests.yml"
+      - ".github/workflows/part9-healthapp-e2e-tests.yml"
 
 jobs:
   test:
