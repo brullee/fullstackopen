@@ -1,42 +1,48 @@
 # Full Stack Open - Exercises
 
-This repository contains my solutions and progress for the **Full Stack Open** course by the University of Helsinki.
+My solutions for the **Full Stack Open** course by the University of Helsinki.
 
 ## Course progress
 
-- **Part 0–2:** React fundamentals, component state, forms, and data fetching
-- **Part 3:** Backend with Node.js, Express, MongoDB, and deployment
-- **Part 4:** Backend testing, user authentication, and authorization
-- **Part 5:** Frontend testing, login/token handling, and end-to-end testing
-- **Part 6:** State management with Context API, Zustand, and React Query
-- **Part 7:** React Router, custom hooks, and rebuild BlogList in three ways with Context API, TanStack Query, and Zustand
-- **Part 8:** Skipped for now
-- **Part 9:** In progress. TypeScript fundamentals, Patientor, health app, flight diaries
-- **Part 10:** Skipped for now
-- **Part 11:** In progress. CI/CD pipeline for the Pokedex app, plus a deploy pipeline for the Part 3 notes backend
-- **Part 12:** In progress.
-- **Part 13–14:** Not started
+- **Part 0-2:** React fundamentals
+- **Part 3:** Node.js, Express, and MongoDB
+- **Part 4:** Backend testing and authentication
+- **Part 5:** Frontend and end-to-end testing
+- **Part 6:** State management
+- **Part 7:** React Router and custom hooks
+- **Part 8:** GraphQL (skipped)
+- **Part 9:** TypeScript (in progress)
+- **Part 10:** React Native (skipped)
+- **Part 11:** CI/CD
+- **Part 12:** Containers (in progress)
+- **Part 13-14:** Not started
 
 ## Deployed applications
 
-- **Notes backend (Part 3):** [fullstackopen-part3-notes-backend-uzes.onrender.com](https://fullstackopen-part3-notes-backend-uzes.onrender.com/). Deployed on Render, redeployed automatically via a GitHub Actions workflow ([`part3-deploy.yaml`](.github/workflows/part3-deploy.yaml)) on push to `main`.
-- **Pokedex (Part 11):** [fullstackopen-hhdt.onrender.com](https://fullstackopen-hhdt.onrender.com). Deployed on Render, redeployed automatically via the CI pipeline ([`pipeline.yaml`](.github/workflows/pipeline.yaml)) on push to `main`, after lint, tests, build, and e2e tests pass.
+- **Notes app (Part 11, exercises 10-12):** [fullstackopen-part3-notes-backend-uzes.onrender.com](https://fullstackopen-part3-notes-backend-uzes.onrender.com/). Code from Part 3, deployed via [`part3-deploy.yaml`](.github/workflows/part3-deploy.yaml).
+- **Pokedex (Part 11, exercises 2-9 & 13-20):** [fullstackopen-hhdt.onrender.com](https://fullstackopen-hhdt.onrender.com), deployed via [`part11-pipeline.yaml`](.github/workflows/part11-pipeline.yaml).
+- **BlogList (Part 11, exercises 21 & 22):** [fullstackopen-1g80.onrender.com](https://fullstackopen-1g80.onrender.com). Pipeline lives in its own repo: [brullee/fso-bloglist-cicd](https://github.com/brullee/fso-bloglist-cicd).
 
 ## Certificates
-
-Certificates live in [certificates/](certificates/), one file per part (or part range) as they're earned, named `partN.png` (e.g. `part9.png`) or `partN-M.png` for a range.
 
 - **Part 0-7:** [certificates/part0-7.png](certificates/part0-7.png) ([verify](https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/4a3d90cf70d70c1773bb77951361a7b0))
 
 ## Technologies & Concepts
+
+### Fundamentals
+
+- Web application fundamentals (HTTP request/response cycle, traditional web apps vs. single-page apps)
+- REST principles (GET, POST, PUT, DELETE)
+- CRUD operations
+- HTTP status codes
 
 ### Frontend
 
 - React (components, state, props, forms, conditional rendering)
 - Custom hooks (reusable stateful logic, e.g. `useField`, `useNotify`)
 - Error boundaries (class components, `getDerivedStateFromError`)
-- Axios (HTTP client)
 - React Router (client-side routing, `useMatch`, `useNavigate`)
+- Axios (HTTP client)
 - MUI (Material UI) & Emotion (component library and styling)
 
 ### State Management
@@ -50,6 +56,7 @@ Certificates live in [certificates/](certificates/), one file per part (or part 
 
 - Node.js
 - Express.js (REST API, routing, middleware)
+- Error handling with middleware
 - MongoDB & Mongoose (schemas, models, validation)
 - Schema relations with `ref` and `.populate()` (e.g. User ↔ Note references)
 - dotenv (environment variables)
@@ -63,9 +70,17 @@ Certificates live in [certificates/](certificates/), one file per part (or part 
 - Middleware-based authentication handling
 - Client-side token persistence with `localStorage` and attaching tokens to requests
 
+### TypeScript
+
+- TypeScript fundamentals (types, interfaces, generics, utility types)
+- Type narrowing & exhaustive type checking (discriminated unions, `never`)
+- Typing React props, state, and event handlers
+- Express + TypeScript backends (`ts-node`, `tsconfig.json`)
+- Runtime schema validation with Zod, layered on top of static types
+- Full-stack TS project (Patientor: typed backend API + React frontend)
+
 ### Testing
 
-- Supertest (HTTP integration testing)
 - Automated backend tests
   - HTTP requests with Supertest
   - API endpoints
@@ -80,39 +95,24 @@ Certificates live in [certificates/](certificates/), one file per part (or part 
   - Playwright
   - Testing full user flows against a running app (login, CRUD, notifications)
 
-### TypeScript
-
-- TypeScript fundamentals (types, interfaces, generics, utility types)
-- Type narrowing & exhaustive type checking (discriminated unions, `never`)
-- Typing React props, state, and event handlers
-- Express + TypeScript backends (`ts-node`, `tsconfig.json`)
-- Runtime schema validation with Zod, layered on top of static types
-- Full-stack TS project (Patientor: typed backend API + React frontend)
-
 ### CI/CD
 
 - GitHub Actions workflows (jobs, steps, triggers on `push`/`pull_request`)
 - Automated pipeline: install → lint (ESLint) → unit tests → build → Playwright e2e tests
 - Path-filtered workflow triggers (only run a pipeline when relevant files change)
+- Branch protection (required PR review and passing status checks before merging to `main`)
 - Continuous deployment via a Render deploy hook triggered from a workflow
+- Skipping deploys with a `#skip` commit message and gating jobs with `needs`/`if`
+- Automatic version tagging on merge (github-tag-action)
+- Discord notifications for successful deploys and broken builds
+- Scheduled health checks of the deployed app (`cron`)
+- Serving a built React frontend from Express, with an SPA fallback for client-side routes
 
-### HTTP & API
+### Tooling
 
-- REST principles (GET, POST, PUT, DELETE)
-- CRUD operations
-- HTTP status codes
-- Error handling with middleware
-
-### Tooling & Other Concepts
-
-- Web application fundamentals (HTTP request/response cycle, traditional web apps vs. single-page apps)
-- cross-env (cross-platform environment variable support)
-- ESLint (code linting)
 - Git & GitHub (version control)
 - npm (package management)
+- ESLint (code linting)
+- cross-env (cross-platform environment variable support)
 - Postman & REST Client (manual API testing)
 - Deployment with Render
-
-## Notes
-
-This repository is updated continuously as I progress through the course.
