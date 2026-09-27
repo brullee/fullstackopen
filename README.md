@@ -26,6 +26,7 @@ My solutions for the **Full Stack Open** course by the University of Helsinki.
 ## Certificates
 
 - **Part 0-7:** [certificates/part0-7.png](certificates/part0-7.png) ([verify](https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/4a3d90cf70d70c1773bb77951361a7b0))
+- **Part 11:** [certificates/part11.png](certificates/part11.png) ([verify](https://courses.mooc.fi/certificates/validate/isd3ryue2e3upku))
 
 ## Technologies & Concepts
 
