@@ -6,10 +6,11 @@ const middleware = require('./utils/middleware')
 const blogRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
+const path = require('path')
 
 const app = express()
 
-logger.info('connecting to', config.MONGODB_URI)
+// logger.info('connecting to', config.MONGODB_URI)
 
 mongoose
   .connect(config.MONGODB_URI, { family: 4 })
@@ -23,9 +24,10 @@ mongoose
 app.use(express.json())
 app.use(middleware.requestLogger)
 
-app.use('/api/blogs', middleware.tokenExtractor ,blogRouter)
+app.use('/api/blogs', middleware.tokenExtractor, blogRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
+app.use(express.static(path.join(__dirname, '../client/dist')))
 
 if (process.env.NODE_ENV === 'test') {
   const testingRouter = require('./controllers/testing')
@@ -34,6 +36,5 @@ if (process.env.NODE_ENV === 'test') {
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
-
 
 module.exports = app

@@ -14,7 +14,8 @@ This repository contains my solutions and progress for the **Full Stack Open** c
 - **Part 9:** In progress. TypeScript fundamentals, Patientor, health app, flight diaries
 - **Part 10:** Skipped for now
 - **Part 11:** In progress. CI/CD pipeline for the Pokedex app, plus a deploy pipeline for the Part 3 notes backend
-- **Part 12–14:** Not started
+- **Part 12:** In progress.
+- **Part 13–14:** Not started
 
 ## Deployed applications
 
