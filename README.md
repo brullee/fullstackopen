@@ -109,6 +109,16 @@ My solutions for the **Full Stack Open** course by the University of Helsinki.
 - Scheduled health checks of the deployed app (`cron`)
 - Serving a built React frontend from Express, with an SPA fallback for client-side routes
 
+### Containers
+
+- Images vs. containers (image names, tags, layers, Docker Hub)
+- Docker CLI (`run`, `start`, `kill`, `rm`, `commit`, `cp`, interactive `-it` sessions)
+- Dockerfiles (`FROM`, `WORKDIR`, `COPY`, `RUN`, `ENV`, `CMD`, `USER`)
+- Image best practices (`npm ci --omit=dev`, `.dockerignore`, running as a non-root user)
+- Port publishing (`-p host:container`)
+- Docker Compose (services, `up`/`down`, `--build`, detached mode, multiple compose files with `-f`)
+- Running MongoDB in a container for local development, initialized with a bind-mounted script
+
 ### Tooling
 
 - Git & GitHub (version control)
