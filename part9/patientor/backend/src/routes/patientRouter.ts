@@ -37,6 +37,16 @@ router.get("/", (_req, res) => {
   res.send(patientService.getNonSensitivePatient());
 });
 
+router.get("/:id", (req, res) => {
+  const { id } = req.params;
+  const patient = patientService.getPatient(id);
+  if (patient) {
+    res.send(patient);
+  } else {
+    res.status(404).send({ error: "Could not find a patient with this id." });
+  }
+});
+
 router.post(
   "/",
   newPatientParser,

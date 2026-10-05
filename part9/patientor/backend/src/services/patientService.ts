@@ -8,7 +8,7 @@ import type {
 
 const patients: Patient[] = patientData;
 
-const getPatient = (): Patient[] => {
+const getAllPatients = (): Patient[] => {
   return patients;
 };
 
@@ -22,14 +22,25 @@ const getNonSensitivePatient = (): NonSensitivePatient[] => {
   }));
 };
 
+const getPatient = (id: string): Patient | undefined => {
+  const requestedPatient = patients.find((p) => p.id === id);
+  return requestedPatient;
+};
+
 const addPatient = (entry: NewPatient): Patient => {
   const newPatient = {
     id: uuid(),
     ...entry,
+    entries: [],
   };
 
   patients.push(newPatient);
   return newPatient;
 };
 
-export default { getPatient, getNonSensitivePatient, addPatient };
+export default {
+  getAllPatients,
+  getNonSensitivePatient,
+  getPatient,
+  addPatient,
+};
