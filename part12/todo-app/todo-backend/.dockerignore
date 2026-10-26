@@ -1,2 +1,5 @@
 node_modules
 .gitignore
+redis_data
+mongo_data
+.env
