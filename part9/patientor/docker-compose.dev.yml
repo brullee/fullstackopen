@@ -1,0 +1,33 @@
+services:
+  app:
+    image: patientor-frontend-dev
+    build:
+      context: ./frontend
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    container_name: patientor-frontend-dev
+    environment:
+      - VITE_BACKEND_URL=/api
+
+  api:
+    image: patientor-backend-dev
+    build:
+      context: ./backend
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    container_name: patientor-backend-dev
+
+  nginx:
+    image: nginx:1.29
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: patientor-reverse-proxy
+    depends_on:
+      - app
+      - api

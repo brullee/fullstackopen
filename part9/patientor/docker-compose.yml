@@ -1,0 +1,21 @@
+services:
+  app:
+    image: patientor-frontend
+    build: ./frontend
+    container_name: patientor-frontend
+
+  api:
+    image: patientor-backend
+    build: ./backend
+    container_name: patientor-backend
+
+  nginx:
+    image: nginx:1.29
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: patientor-reverse-proxy-prod
+    depends_on:
+      - app
+      - api

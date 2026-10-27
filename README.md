@@ -14,7 +14,7 @@ My solutions for the **Full Stack Open** course by the University of Helsinki.
 - **Part 9:** TypeScript (in progress)
 - **Part 10:** React Native (skipped)
 - **Part 11:** CI/CD
-- **Part 12:** Containers (in progress)
+- **Part 12:** Containers
 - **Part 13-14:** Not started
 
 ## Deployed applications
@@ -22,6 +22,10 @@ My solutions for the **Full Stack Open** course by the University of Helsinki.
 - **Notes app (Part 11, exercises 10-12):** [fullstackopen-part3-notes-backend-uzes.onrender.com](https://fullstackopen-part3-notes-backend-uzes.onrender.com/). Code from Part 3, deployed via [`part3-deploy.yaml`](.github/workflows/part3-deploy.yaml).
 - **Pokedex (Part 11, exercises 2-9 & 13-20):** [fullstackopen-hhdt.onrender.com](https://fullstackopen-hhdt.onrender.com), deployed via [`part11-pipeline.yaml`](.github/workflows/part11-pipeline.yaml).
 - **BlogList (Part 11, exercises 21 & 22):** [fullstackopen-1g80.onrender.com](https://fullstackopen-1g80.onrender.com). Pipeline lives in its own repo: [brullee/fso-bloglist-cicd](https://github.com/brullee/fso-bloglist-cicd).
+
+## Containerized applications
+
+- **Patientor (Part 12, exercises 22 & 23):** [`part9/patientor`](part9/patientor). Development: `docker compose -f docker-compose.dev.yml up`. Production: `docker compose up --build`. Both run on [localhost:8080](http://localhost:8080).
 
 ## Certificates
 
