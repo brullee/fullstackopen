@@ -32,7 +32,7 @@ My solutions for the **Full Stack Open** course by the University of Helsinki.
 
 - **Part 0-7:** [certificates/part0-7.png](certificates/part0-7.png) ([verify](https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/4a3d90cf70d70c1773bb77951361a7b0))
 - **Part 11:** [certificates/part11.png](certificates/part11.png) ([verify](https://courses.mooc.fi/certificates/validate/isd3ryue2e3upku))
-- **Part 12:** Pending...
+- **Part 12:** [certificates/part12.png](certificates/part12.png) ([verify](https://courses.mooc.fi/certificates/validate/7yxi3asw66wr43p))
 
 ## Technologies & Concepts
 
@@ -117,20 +117,15 @@ My solutions for the **Full Stack Open** course by the University of Helsinki.
 
 ### Containers
 
-- Containers vs. virtual machines (OS-level virtualization, shared host kernel, Docker daemon and client)
-- Images vs. containers (image names, tags, layers, Docker Hub)
-- Docker CLI (`run`, `start`, `kill`, `rm`, `commit`, `cp`, `ls -a`, `--rm`, `--name`, `-it` sessions, `-p` port publishing)
-- Dockerfiles (`FROM`, `WORKDIR`, `COPY`, `RUN`, `ENV`, `CMD`, `USER`)
-- Image best practices (`npm ci` vs. `npm install`, `--omit=dev`, `.dockerignore`, running as a non-root user)
-- Docker Compose (services, `up`/`down`, `--build`, detached mode, multiple compose files with `-f`)
-- MongoDB and Redis in containers (init script via bind mount, Redis as a cache with `--appendonly` persistence)
-- Volumes: named volumes vs. bind mounts (`docker volume ls`/`inspect`)
-- Container networking (service names as hostnames, `depends_on`, publishing only the reverse proxy's port)
-- Development containers with hot reload (`dev.Dockerfile`, bind-mounted source, anonymous `node_modules` volume, Vite `--host` and `allowedHosts`)
-- Multi-stage builds (build with Node, serve the static bundle with nginx), running tests as a build stage, and build-time env vars for Vite
-- Nginx as a reverse proxy (`proxy_pass` path handling, trailing slash) and SPA fallback with `try_files`
-- Debugging containers (`logs`, `exec`, `ps -a`, BusyBox with `docker compose run`) and database CLIs inside containers (`mongosh`, `redis-cli`)
-- E2E tests against a Docker Compose stack in GitHub Actions
+- Docker fundamentals (containers vs. virtual machines, images vs. containers, image names, tags and layers, Docker Hub)
+- Docker CLI (`run`, `exec`, `logs`, `cp`, `commit`, interactive `-it` sessions, port publishing)
+- Dockerfiles and image best practices (`npm ci --omit=dev`, `.dockerignore`, running as a non-root user)
+- Docker Compose (services, `up`/`down`, `--build`, multiple compose files with `-f`, `depends_on`)
+- MongoDB and Redis in containers, with named volumes and bind mounts for data and init scripts
+- Development containers with hot reload (bind-mounted source, anonymous `node_modules` volume, Vite `allowedHosts`)
+- Multi-stage builds (build with Node, serve with nginx), running tests as a build stage, build-time env vars for Vite
+- Nginx as a reverse proxy (container networking, `proxy_pass` path handling) and SPA fallback with `try_files`
+- Debugging containers (BusyBox, `mongosh`, `redis-cli`) and E2E tests against a Compose stack in GitHub Actions
 
 ### Tooling
 
