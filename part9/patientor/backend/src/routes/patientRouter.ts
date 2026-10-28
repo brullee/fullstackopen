@@ -34,7 +34,7 @@ const errorMiddleware = (
 };
 
 router.get("/", (_req, res) => {
-  res.send(patientService.getNonSensitivePatient());
+  res.send(patientService.getNonSensitivePatients());
 });
 
 router.get("/:id", (req, res) => {

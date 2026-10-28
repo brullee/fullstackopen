@@ -8,11 +8,7 @@ import type {
 
 const patients: Patient[] = patientData;
 
-const getAllPatients = (): Patient[] => {
-  return patients;
-};
-
-const getNonSensitivePatient = (): NonSensitivePatient[] => {
+const getNonSensitivePatients = (): NonSensitivePatient[] => {
   return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
     id,
     name,
@@ -39,8 +35,7 @@ const addPatient = (entry: NewPatient): Patient => {
 };
 
 export default {
-  getAllPatients,
-  getNonSensitivePatient,
+  getNonSensitivePatients,
   getPatient,
   addPatient,
 };

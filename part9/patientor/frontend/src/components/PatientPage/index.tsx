@@ -5,8 +5,10 @@ import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
 import TransgenderIcon from "@mui/icons-material/Transgender";
 
-import { Gender, Patient } from "../../types";
+import { Gender, Patient, Entry } from "../../types";
 import patientService from "../../services/patients";
+
+import { EntryItem } from "../EntryItem";
 
 const GenderIcon = ({ gender }: { gender: Gender }) => {
   switch (gender) {
@@ -41,14 +43,28 @@ const PatientPage = () => {
   if (!patient) return <Typography>Loading...</Typography>;
 
   return (
-    <Box>
-      <Typography variant="h4" sx={{ marginY: "0.5em" }}>
-        {patient.name} <GenderIcon gender={patient.gender} />
-      </Typography>
-      <Typography>ssn: {patient.ssn}</Typography>
-      <Typography>occupation: {patient.occupation}</Typography>
-      <Typography>date of birth: {patient.dateOfBirth}</Typography>
-    </Box>
+    <>
+      <Box>
+        <Typography variant="h4" sx={{ marginY: "0.5em" }}>
+          {patient.name} <GenderIcon gender={patient.gender} />
+        </Typography>
+        <Typography>ssn: {patient.ssn}</Typography>
+        <Typography>occupation: {patient.occupation}</Typography>
+        <Typography>date of birth: {patient.dateOfBirth}</Typography>
+      </Box>
+      <Box>
+        <Typography variant="h5" sx={{ marginY: "1.8em" }}>
+          Entries
+        </Typography>
+        {patient.entries.length === 0 ? (
+          <div>There are currently no entries in our systems.</div>
+        ) : (
+          patient.entries.map((entry: Entry) => (
+            <EntryItem key={entry.id} entry={entry} />
+          ))
+        )}
+      </Box>
+    </>
   );
 };
 
