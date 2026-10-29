@@ -57,7 +57,7 @@ const PatientPage = () => {
           Entries
         </Typography>
         {patient.entries.length === 0 ? (
-          <div>There are currently no entries in our systems.</div>
+          <div>No entries yet.</div>
         ) : (
           patient.entries.map((entry: Entry) => (
             <EntryItem key={entry.id} entry={entry} />
