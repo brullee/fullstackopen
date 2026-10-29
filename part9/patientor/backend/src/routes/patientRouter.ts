@@ -5,8 +5,8 @@ import express, {
   type Response,
   type NextFunction,
 } from "express";
-import { NewPatientSchema } from "../utils/types.ts";
-import type { NewPatient, Patient } from "../utils/types.ts";
+import { NewPatientSchema, NewEntrySchema } from "../utils/types.ts";
+import type { Entry, NewEntry, NewPatient, Patient } from "../utils/types.ts";
 import patientService from "../services/patientService.ts";
 
 const router = express.Router();
@@ -14,6 +14,15 @@ const router = express.Router();
 const newPatientParser = (req: Request, _res: Response, next: NextFunction) => {
   try {
     NewPatientSchema.parse(req.body);
+    next();
+  } catch (error: unknown) {
+    next(error);
+  }
+};
+
+const newEntryParser = (req: Request, _res: Response, next: NextFunction) => {
+  try {
+    NewEntrySchema.parse(req.body);
     next();
   } catch (error: unknown) {
     next(error);
@@ -53,6 +62,17 @@ router.post(
   (req: Request<unknown, unknown, NewPatient>, res: Response<Patient>) => {
     const newPatient = patientService.addPatient(req.body);
     res.json(newPatient);
+  },
+);
+
+router.post(
+  "/:id/entries",
+  newEntryParser,
+  (req: Request<{ id: string }, unknown, NewEntry>, res: Response<Entry>) => {
+    const { id } = req.params;
+
+    const newEntry = patientService.addEntry(id, req.body);
+    res.json(newEntry);
   },
 );
 
