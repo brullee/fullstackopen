@@ -11,9 +11,9 @@ export const GenderSchema = z.enum(["male", "female", "other"]);
 export type Gender = z.infer<typeof GenderSchema>;
 
 export const BaseEntrySchema = z.object({
-  description: z.string(),
+  description: z.string().min(1),
   date: z.iso.date(),
-  specialist: z.string(),
+  specialist: z.string().min(1),
   diagnosisCodes: z.array(DiagnosisSchema.shape.code).optional(),
 });
 export type BaseEntry = z.infer<typeof BaseEntrySchema>;
@@ -42,13 +42,13 @@ const HealthCheckEntrySchema = BaseEntrySchema.extend({
 const HospitalEntrySchema = BaseEntrySchema.extend({
   type: z.literal("Hospital"),
   discharge: z
-    .object({ date: z.iso.date(), criteria: z.iso.date() })
+    .object({ date: z.iso.date(), criteria: z.string().min(1) })
     .optional(),
 });
 
 const OccupationalHealthcareEntrySchema = BaseEntrySchema.extend({
   type: z.literal("OccupationalHealthcare"),
-  employerName: z.string(),
+  employerName: z.string().min(1),
   sickLeave: z
     .object({ startDate: z.iso.date(), endDate: z.iso.date() })
     .optional(),
@@ -79,10 +79,3 @@ export interface Patient extends NewPatient {
 }
 
 export type NonSensitivePatient = Omit<Patient, "ssn" | "entries">;
-
-// // Define special omit for unions
-// type UnionOmit<T, K extends string | number | symbol> = T extends unknown
-//   ? Omit<T, K>
-//   : never;
-// // Define Entry without the 'id' property
-// type EntryWithoutId = UnionOmit<Entry, "id">;

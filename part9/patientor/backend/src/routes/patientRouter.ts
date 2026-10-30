@@ -68,11 +68,18 @@ router.post(
 router.post(
   "/:id/entries",
   newEntryParser,
-  (req: Request<{ id: string }, unknown, NewEntry>, res: Response<Entry>) => {
+  (
+    req: Request<{ id: string }, unknown, NewEntry>,
+    res: Response<Entry | { error: string }>,
+  ) => {
     const { id } = req.params;
 
     const newEntry = patientService.addEntry(id, req.body);
-    res.json(newEntry);
+    if (newEntry) {
+      res.json(newEntry);
+    } else {
+      res.status(404).send({ error: "Could not find a patient with this id." });
+    }
   },
 );
 
