@@ -18,7 +18,7 @@ interface Props {
 
 const AddEntryModal = ({ modalOpen, onClose, onSubmit, error }: Props) => (
   <Dialog fullWidth={true} open={modalOpen} onClose={() => onClose()}>
-    <DialogTitle>New HealthCheck Entry</DialogTitle>
+    <DialogTitle>New Entry</DialogTitle>
     <Divider />
     <DialogContent>
       {error && <Alert severity="error">{error}</Alert>}
